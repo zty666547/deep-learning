@@ -7,7 +7,6 @@ import shutil
 import tempfile
 from pathlib import Path
 from types import TracebackType
-from typing import Optional, Type
 
 
 class CoolerResource:
@@ -20,7 +19,7 @@ class CoolerResource:
 
     def __init__(self, path: Path) -> None:
         self.path = path
-        self._temporary_path: Optional[Path] = None
+        self._temporary_path: Path | None = None
         self.cooler = None
 
     def __enter__(self):
@@ -43,16 +42,20 @@ class CoolerResource:
                 raise
             source_path = self._temporary_path
 
-        self.cooler = cooler.Cooler(str(source_path))
-        # Force a lightweight read so malformed files fail inside the context.
-        _ = self.cooler.info
+        try:
+            self.cooler = cooler.Cooler(str(source_path))
+            # Force a lightweight read so malformed files fail inside the context.
+            _ = self.cooler.info
+        except Exception:
+            self._cleanup()
+            raise
         return self.cooler
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc: Optional[BaseException],
-        traceback: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        traceback: TracebackType | None,
     ) -> None:
         self.cooler = None
         self._cleanup()
@@ -79,4 +82,3 @@ def open_cooler(path: str) -> CoolerResource:
     if not (source.name.endswith(".cool") or source.name.endswith(".cool.gz")):
         raise ValueError("Expected a .cool or .cool.gz file")
     return CoolerResource(source)
-

@@ -2,12 +2,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import re
-from typing import Optional, Tuple
+from dataclasses import dataclass
 
 import numpy as np
-
 
 _REGION_PATTERN = re.compile(r"^(?P<chrom>[^:]+):(?P<start>[0-9,]+)-(?P<end>[0-9,]+)$")
 
@@ -54,7 +52,7 @@ def window_from_center(
     chrom: str,
     center: int,
     size_bp: int,
-    chrom_length: Optional[int] = None,
+    chrom_length: int | None = None,
 ) -> GenomicWindow:
     """Build a window around a genomic center and optionally clamp to a chromosome.
 
@@ -94,8 +92,8 @@ def fetch_window(
     cool,
     window: GenomicWindow,
     balance: bool = True,
-    fill_value: Optional[float] = None,
-) -> Tuple[np.ndarray, int]:
+    fill_value: float | None = None,
+) -> tuple[np.ndarray, int]:
     """Fetch a dense local matrix and return it with the COOL bin size."""
 
     if window.chrom not in cool.chromnames:
@@ -113,4 +111,3 @@ def fetch_window(
     if fill_value is not None:
         matrix = np.nan_to_num(matrix, nan=fill_value, posinf=fill_value, neginf=fill_value)
     return matrix, int(cool.binsize)
-

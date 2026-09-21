@@ -3,14 +3,16 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Dict
 
 import pandas as pd
 
-
-_ALIASES: Dict[str, str] = {
+_ALIASES: dict[str, str] = {
+    "chrom": "chrom",
     "chr": "chrom",
     "chromosome": "chrom",
+    "start": "start",
+    "end": "end",
+    "structure_type": "structure_type",
     "type": "structure_type",
     "label": "structure_type",
     "class": "structure_type",
@@ -34,7 +36,9 @@ def read_structures_csv(path: str) -> pd.DataFrame:
     rename = {
         column: _ALIASES[column.lower()]
         for column in frame.columns
-        if column.lower() in _ALIASES and _ALIASES[column.lower()] not in frame.columns
+        if column.lower() in _ALIASES
+        and column != _ALIASES[column.lower()]
+        and _ALIASES[column.lower()] not in frame.columns
     }
     frame = frame.rename(columns=rename)
 
@@ -61,4 +65,3 @@ def read_structures_csv(path: str) -> pd.DataFrame:
     if "structure_type" in frame.columns:
         frame["structure_type"] = frame["structure_type"].astype(str).str.strip()
     return frame
-

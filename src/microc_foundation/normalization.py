@@ -2,10 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Optional
-
 import numpy as np
-
 
 SUPPORTED_METHODS = ("none", "log1p", "minmax", "zscore", "max")
 
@@ -13,7 +10,7 @@ SUPPORTED_METHODS = ("none", "log1p", "minmax", "zscore", "max")
 def normalize_matrix(
     matrix: np.ndarray,
     method: str = "log1p",
-    clip_percentile: Optional[float] = None,
+    clip_percentile: float | None = None,
     eps: float = 1e-8,
 ) -> np.ndarray:
     """Normalize a 2-D matrix while preserving non-finite entries.
@@ -59,4 +56,3 @@ def normalize_matrix(
         scale = float(np.max(np.abs(finite_values)))
         values[finite] = 0.0 if scale < eps else finite_values / scale
     return values
-

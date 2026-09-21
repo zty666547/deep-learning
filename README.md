@@ -182,6 +182,18 @@ python scripts/train_baseline.py \
 
 输出包括 `model.pt`、`metrics.json`、`history.csv`、训练曲线和测试集混淆矩阵。首轮结果和多数类对照见 [`docs/task1-baseline-results.md`](docs/task1-baseline-results.md)。当前结果只代表单随机种子基线，不作为稳定准确率或生物学结论。
 
+生成测试集中每类一个预测正确样本的输入梯度显著性图：
+
+```bash
+python scripts/generate_saliency.py \
+  --dataset data/processed/task1_windows_full.npz \
+  --checkpoint outputs/task1_baseline/model.pt \
+  --output-dir outputs/task1_baseline/saliency \
+  --per-class 1
+```
+
+显著性图解释预测类别对输入像素的局部敏感性，不直接等同于生物学因果区域。
+
 ## 下一轮建议
 
 1. 核对论文/实践方案中的坐标起点约定，确认是否需要 1-based 到 0-based 转换；

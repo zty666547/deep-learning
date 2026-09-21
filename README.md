@@ -194,12 +194,24 @@ python scripts/generate_saliency.py \
 
 显著性图解释预测类别对输入像素的局部敏感性，不直接等同于生物学因果区域。
 
+进行多随机种子稳定性评估：
+
+```bash
+python scripts/run_seed_sweep.py \
+  --dataset data/processed/task1_windows_full.npz \
+  --output-dir outputs/task1_seed_sweep \
+  --seeds 2026 2027 2028 2029 2030 \
+  --epochs 40 --patience 8 --device cpu
+```
+
+程序保存每个种子的完整训练输出，以及汇总JSON、CSV和稳定性曲线。当前五次运行的Macro F1为 `0.4851 ± 0.0566`。
+
 ## 下一轮建议
 
 1. 核对论文/实践方案中的坐标起点约定，确认是否需要 1-based 到 0-based 转换；
 2. 设计按基因组区段分组的训练、验证、测试划分，避免相邻结构泄漏；
 3. 确认双重复在模型中作为通道、独立样本或一致性约束的方案；
-4. 进行多随机种子、类别权重和采样策略对照；
+4. 比较类别权重、平衡采样和焦点损失等少数类策略；
 5. 比较窗口大小、池化分辨率和重复融合方式，再增加显著性图分析。
 
 ## 开发记录

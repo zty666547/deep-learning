@@ -24,3 +24,12 @@
 - README 补充环境安装、坐标约定、最小命令、标注格式、真实数据缺口和下一轮建议。
 - 增加 `.cool/.cool.gz` 端到端夹具测试和 PNG 文件测试。
 - 验证：`pytest` 共 11 项通过，`ruff check .` 通过；另用 4×4 合成 COOL 夹具执行完整命令，成功生成 PNG。夹具仅用于工程验证，不用于推导实验结论。
+
+## 2026-09-21 — `feat: prepare real structure annotations`
+
+- 增加课程标注工作簿读取器，固定读取 Supplementary Tables 4–6，并合并 OPCID、CHIN、CHID。
+- 标准化输出保留结构 ID、原始染色体名、来源工作表、原始区间及 RedC/H-NS 字段。
+- 支持显式染色体名映射；本次将工作簿中的 `MG1655` 映射为 COOL 使用的 `NC_000913.3`，同时保留 `source_chrom`。
+- 增加 `prepare_annotations.py` 命令、`openpyxl` 依赖和读取测试。
+- 真实数据验证：生成 344 条 `structures.csv`（OPCID 68、CHIN 250、CHID 26），无缺失坐标；数据文件保留在 Git 忽略目录，不上传仓库。
+- 工程验证：`pytest` 共 12 项通过，`ruff check --no-cache .` 通过。

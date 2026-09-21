@@ -1,6 +1,6 @@
 # 深度学习综合实践：Micro-C 数据处理底座
 
-本仓库用于《基于深度学习的接触矩阵处理实践方案》。第一轮仅建设项目结构、数据读取、局部窗口、基础归一化、结构标注读取和热图输出，不包含模型训练或实验结论。
+本仓库用于《基于深度学习的接触矩阵处理实践方案》。第一轮建设项目结构、数据读取、局部窗口、基础归一化、结构标注读取、热图输出和任务一固定张量生成，不包含模型训练或实验结论。
 
 ## 本轮范围
 
@@ -9,6 +9,8 @@
 - 支持 `none`、`log1p`、`minmax`、`zscore`、`max` 基础归一化；
 - 无界面环境下保存 PNG 热图；
 - 读取并校验 `structures.csv`；
+- 从课程 `标注数据.xlsx` 提取并标准化 OPCID、CHIN、CHID；
+- 跨多个生物学重复生成固定尺寸、可复现的任务一 NPZ 张量；
 - 提供“读取 → 切窗 → 归一化 → 保存热图”的最小命令。
 
 本轮不训练模型、不生成生物学结论，也不把测试夹具当作实验结果。
@@ -106,19 +108,58 @@ from microc_foundation import read_structures_csv
 structures = read_structures_csv("data/raw/structures.csv")
 ```
 
-## 尚缺真实数据
+从课程工作簿生成标准化文件：
 
-仓库当前不包含课程真实 `.cool/.cool.gz`、染色体版本说明或 `structures.csv`。因此当前验证只覆盖文件协议、矩阵切片、归一化、边界检查与图片生成；不报告准确率、结构数量或任何生物学发现。
+```bash
+python scripts/prepare_annotations.py \
+  --input data/raw/标注数据.xlsx \
+  --output data/processed/structures.csv \
+  --chrom-map MG1655=NC_000913.3
+```
+
+## 本次真实数据与最小验证
+
+当前本地 `data/raw/` 已放入 37°C 的 rep1、rep2 COOL 和课程标注工作簿。数据文件由 Git 忽略，不会推送到 GitHub。
+
+- 两个 COOL 均为 10 bp 分辨率，染色体为 `NC_000913.3`；
+- COOL 没有 balancing weight，运行真实数据时使用 `--unbalanced`；
+- 标准化标注共 344 条：OPCID 68、CHIN 250、CHID 26；
+- 真实数据质检、文件哈希和限制见 [`docs/data-quality-report.md`](docs/data-quality-report.md)。
+
+生成 rep1 的 CHIN_1 最小热图：
+
+```bash
+python scripts/minimal_pipeline.py \
+  --input data/raw/GSE272159_37C_rep1.mapq_30.10.cool \
+  --chrom NC_000913.3 --center 58840 --size-bp 20480 \
+  --unbalanced --normalization log1p \
+  --output outputs/real-data/rep1_CHIN_1.png
+```
+
+## 任务一数据集切窗
+
+以下命令使用两个重复，对每个结构截取 20,480 bp（2,048 个原始 bin），按 16×16 块求和到 128×128，再做 `log1p`：
+
+```bash
+python scripts/build_structure_dataset.py \
+  --cool data/raw/GSE272159_37C_rep1.mapq_30.10.cool \
+  --cool data/raw/GSE272159_37C_rep2.mapq_30.10.cool \
+  --structures data/processed/structures.csv \
+  --output data/processed/task1_windows.npz \
+  --window-size-bp 20480 --pool-factor 16 \
+  --pooling sum --normalization log1p
+```
+
+快速冒烟验证可追加 `--per-class-limit 1`。输出 `matrices` 维度依次为“结构、重复、高、宽”，并同时保存标签、结构 ID、标注区间、实际窗口和分辨率元数据。
 
 ## 下一轮建议
 
-1. 接入课程真实数据并记录参考基因组、分辨率、条件和重复编号；
-2. 对 `structures.csv` 与 COOL 染色体命名、范围和分辨率做数据质检；
-3. 生成任务一的正样本窗口和背景/负样本窗口索引；
-4. 固化训练、验证、测试划分，避免相邻基因组窗口的数据泄漏；
-5. 在此底座上实现三分类基线和可解释性输出。
+1. 核对论文/实践方案中的坐标起点约定，确认是否需要 1-based 到 0-based 转换；
+2. 设计按基因组区段分组的训练、验证、测试划分，避免相邻结构泄漏；
+3. 确认双重复在模型中作为通道、独立样本或一致性约束的方案；
+4. 生成完整任务一张量与数据清单，统计类别不平衡；
+5. 在此底座上实现三分类基线、混淆矩阵和可解释性输出。
 
 ## 开发记录
 
 阶段性提交的范围和验证状态见 [`docs/development-log.md`](docs/development-log.md)。
-

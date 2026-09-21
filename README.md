@@ -168,13 +168,27 @@ python scripts/create_splits.py \
 
 训练、验证、测试依次使用染色体的 70%、15%、15%。若某个结构的提取窗口跨越分界线，清单会将它标记为 `excluded_boundary`。当前344条结构没有窗口跨界，最终数量为训练248、验证55、测试41。
 
+## CNN 三分类基线
+
+两个生物学重复作为两个输入通道，训练集统计量用于标准化；模型使用类别加权损失，并依据验证集宏平均F1早停：
+
+```bash
+python scripts/train_baseline.py \
+  --dataset data/processed/task1_windows_full.npz \
+  --output-dir outputs/task1_baseline \
+  --epochs 40 --batch-size 32 --patience 8 \
+  --seed 2026 --device cpu
+```
+
+输出包括 `model.pt`、`metrics.json`、`history.csv`、训练曲线和测试集混淆矩阵。首轮结果和多数类对照见 [`docs/task1-baseline-results.md`](docs/task1-baseline-results.md)。当前结果只代表单随机种子基线，不作为稳定准确率或生物学结论。
+
 ## 下一轮建议
 
 1. 核对论文/实践方案中的坐标起点约定，确认是否需要 1-based 到 0-based 转换；
 2. 设计按基因组区段分组的训练、验证、测试划分，避免相邻结构泄漏；
 3. 确认双重复在模型中作为通道、独立样本或一致性约束的方案；
-4. 生成完整任务一张量与数据清单，统计类别不平衡；
-5. 在此底座上实现三分类基线、混淆矩阵和可解释性输出。
+4. 进行多随机种子、类别权重和采样策略对照；
+5. 比较窗口大小、池化分辨率和重复融合方式，再增加显著性图分析。
 
 ## 开发记录
 

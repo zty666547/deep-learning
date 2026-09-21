@@ -152,6 +152,22 @@ python scripts/build_structure_dataset.py \
 
 快速冒烟验证可追加 `--per-class-limit 1`。输出 `matrices` 维度依次为“结构、重复、高、宽”，并同时保存标签、结构 ID、标注区间、实际窗口和分辨率元数据。
 
+## 无泄漏数据划分
+
+当前数据只有一条染色体，因此采用连续基因组区段划分，而不是随机打散相邻结构：
+
+```bash
+python scripts/create_splits.py \
+  --structures data/processed/structures.csv \
+  --output data/processed/structures_split.csv \
+  --chrom-length 4641652 \
+  --window-size-bp 20480 \
+  --train-fraction 0.70 \
+  --validation-fraction 0.15
+```
+
+训练、验证、测试依次使用染色体的 70%、15%、15%。若某个结构的提取窗口跨越分界线，清单会将它标记为 `excluded_boundary`。当前344条结构没有窗口跨界，最终数量为训练248、验证55、测试41。
+
 ## 下一轮建议
 
 1. 核对论文/实践方案中的坐标起点约定，确认是否需要 1-based 到 0-based 转换；

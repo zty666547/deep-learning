@@ -175,5 +175,10 @@ def build_structure_dataset(
         pooled_bin_size=np.array(bin_size * pool_factor, dtype="int64"),
         normalization=np.array(normalization),
         pooling=np.array(pooling),
+        split=(
+            selected["split"].astype(str).to_numpy(dtype=str)
+            if "split" in selected.columns
+            else np.full(len(selected), "", dtype=str)
+        ),
     )
     return output

@@ -7,7 +7,7 @@ name = "microc-foundation"
 version = "0.1.0"
 description = "Micro-C contact-matrix data foundation for the deep-learning course project"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 dependencies = [
   "cooler>=0.10,<0.11",
   "h5py>=3.10,<4",
@@ -34,5 +34,4 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
-
+target-version = "py39"

@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 
 from microc_foundation.experiments import summarize_seed_results, write_seed_summary
-from microc_foundation.training import train_baseline
+from microc_foundation.training import SUPPORTED_IMBALANCE_STRATEGIES, train_baseline
 
 
 def main() -> int:
@@ -21,6 +21,12 @@ def main() -> int:
     parser.add_argument("--weight-decay", type=float, default=1e-4)
     parser.add_argument("--patience", type=int, default=8)
     parser.add_argument("--device", default="cpu", choices=("cpu", "mps", "auto"))
+    parser.add_argument(
+        "--imbalance-strategy",
+        default="weighted_ce",
+        choices=SUPPORTED_IMBALANCE_STRATEGIES,
+    )
+    parser.add_argument("--focal-gamma", type=float, default=2.0)
     arguments = parser.parse_args()
 
     results: list[dict[str, object]] = []
@@ -35,6 +41,8 @@ def main() -> int:
             patience=arguments.patience,
             seed=seed,
             device_name=arguments.device,
+            imbalance_strategy=arguments.imbalance_strategy,
+            focal_gamma=arguments.focal_gamma,
         )
         results.append(result)
         print(

@@ -206,13 +206,26 @@ python scripts/run_seed_sweep.py \
 
 程序保存每个种子的完整训练输出，以及汇总JSON、CSV和稳定性曲线。当前五次运行的Macro F1为 `0.4851 ± 0.0566`。
 
+比较三种类别不平衡策略：
+
+```bash
+python scripts/compare_imbalance_strategies.py \
+  --dataset data/processed/task1_windows_full.npz \
+  --output-dir outputs/task1_imbalance_comparison \
+  --seeds 2026 2027 2028 \
+  --strategies weighted_ce balanced_sampler focal \
+  --epochs 40 --patience 8 --focal-gamma 2.0 --device cpu
+```
+
+每个策略和随机种子的模型、指标与曲线会分别保存，同时生成总对照JSON、CSV和柱状图。当前三随机种子结果中，Focal Loss的Macro F1为 `0.4999 ± 0.0168`，略高于加权交叉熵和均衡采样；样本量较小，详见 [`docs/task1-baseline-results.md`](docs/task1-baseline-results.md)。
+
 ## 下一轮建议
 
 1. 核对论文/实践方案中的坐标起点约定，确认是否需要 1-based 到 0-based 转换；
-2. 设计按基因组区段分组的训练、验证、测试划分，避免相邻结构泄漏；
-3. 确认双重复在模型中作为通道、独立样本或一致性约束的方案；
-4. 比较类别权重、平衡采样和焦点损失等少数类策略；
-5. 比较窗口大小、池化分辨率和重复融合方式，再增加显著性图分析。
+2. 在固定划分下比较窗口大小和池化分辨率，避免同时改变多个实验变量；
+3. 比较双重复作为通道、独立样本或一致性约束的方案；
+4. 结合更多随机种子复核Focal Loss优势，并检查CHID错误样本；
+5. 增加更稳定的显著性方法和跨种子解释一致性分析。
 
 ## 开发记录
 

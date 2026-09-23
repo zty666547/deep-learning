@@ -92,3 +92,85 @@ def write_seed_summary(summary: dict[str, object], output_dir: str) -> Path:
     figure.savefig(output / "seed_stability.png", dpi=180)
     plt.close(figure)
     return output
+
+
+def summarize_strategy_results(
+    strategy_results: dict[str, list[dict[str, object]]],
+) -> dict[str, object]:
+    """Aggregate seed summaries for multiple imbalance strategies."""
+
+    if not strategy_results:
+        raise ValueError("at least one strategy result is required")
+    summaries = {
+        strategy: summarize_seed_results(results)
+        for strategy, results in strategy_results.items()
+    }
+    class_orders = {tuple(summary["class_names"]) for summary in summaries.values()}
+    if len(class_orders) != 1:
+        raise ValueError("all strategies must use the same class order")
+    return {"strategies": summaries, "class_names": list(next(iter(class_orders)))}
+
+
+def write_strategy_comparison(summary: dict[str, object], output_dir: str) -> Path:
+    """Write JSON, CSV and a compact strategy comparison figure."""
+
+    output = Path(output_dir).expanduser()
+    output.mkdir(parents=True, exist_ok=True)
+    (output / "comparison.json").write_text(
+        json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
+    class_names = summary["class_names"]
+    rows: list[dict[str, object]] = []
+    for strategy, strategy_summary in summary["strategies"].items():
+        row: dict[str, object] = {
+            "strategy": strategy,
+            "num_runs": strategy_summary["num_runs"],
+        }
+        aggregate = strategy_summary["aggregate"]
+        for metric in _METRICS:
+            for statistic in ("mean", "std"):
+                row[f"test_{metric}_{statistic}"] = aggregate[f"test_{metric}"][
+                    statistic
+                ]
+        for class_name in class_names:
+            for statistic in ("mean", "std"):
+                row[f"test_recall_{class_name}_{statistic}"] = aggregate[
+                    f"test_recall_{class_name}"
+                ][statistic]
+        rows.append(row)
+    with (output / "comparison.csv").open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+
+    strategies = [str(row["strategy"]) for row in rows]
+    metric_keys = ["test_macro_f1", *[f"test_recall_{name}" for name in class_names]]
+    labels = ["Macro F1", *[f"{name} recall" for name in class_names]]
+    x_positions = np.arange(len(strategies))
+    width = 0.8 / len(metric_keys)
+    figure, axis = plt.subplots(figsize=(10, 5), constrained_layout=True)
+    for index, (metric, label) in enumerate(zip(metric_keys, labels)):
+        aggregate_values = [
+            summary["strategies"][strategy]["aggregate"][metric]
+            for strategy in strategies
+        ]
+        offset = (index - (len(metric_keys) - 1) / 2) * width
+        axis.bar(
+            x_positions + offset,
+            [value["mean"] for value in aggregate_values],
+            width,
+            yerr=[value["std"] for value in aggregate_values],
+            capsize=3,
+            label=label,
+        )
+    axis.set(
+        xticks=x_positions,
+        xticklabels=strategies,
+        ylabel="Test score (mean ± sample SD)",
+        title="Task 1 class-imbalance strategy comparison",
+        ylim=(0, 1),
+    )
+    axis.legend(ncol=2)
+    figure.savefig(output / "strategy_comparison.png", dpi=180)
+    plt.close(figure)
+    return output

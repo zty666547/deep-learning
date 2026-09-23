@@ -15,10 +15,41 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from torch import nn
-from torch.utils.data import DataLoader, TensorDataset
+from torch.nn import functional as F
+from torch.utils.data import DataLoader, TensorDataset, WeightedRandomSampler
 
 from .metrics import classification_metrics
 from .model import MicroCCNN
+
+SUPPORTED_IMBALANCE_STRATEGIES = ("weighted_ce", "balanced_sampler", "focal")
+
+
+class FocalLoss(nn.Module):
+    """Multi-class focal loss with optional per-class weights."""
+
+    def __init__(
+        self,
+        *,
+        alpha: torch.Tensor | None = None,
+        gamma: float = 2.0,
+    ) -> None:
+        super().__init__()
+        if gamma < 0:
+            raise ValueError("focal gamma must be non-negative")
+        if alpha is not None:
+            self.register_buffer("alpha", alpha)
+        else:
+            self.alpha = None
+        self.gamma = gamma
+
+    def forward(self, logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+        cross_entropy = F.cross_entropy(
+            logits, targets, weight=self.alpha, reduction="none"
+        )
+        target_probability = torch.softmax(logits, dim=1).gather(
+            1, targets.unsqueeze(1)
+        ).squeeze(1)
+        return (((1.0 - target_probability) ** self.gamma) * cross_entropy).mean()
 
 
 def _set_seed(seed: int) -> None:
@@ -68,7 +99,7 @@ def _plot_history(history: list[dict[str, float]], output: Path) -> None:
     figure, axes = plt.subplots(1, 2, figsize=(10, 4), constrained_layout=True)
     axes[0].plot(epochs, [row["train_loss"] for row in history], label="Train")
     axes[0].plot(epochs, [row["validation_loss"] for row in history], label="Validation")
-    axes[0].set(xlabel="Epoch", ylabel="Weighted cross-entropy", title="Loss")
+    axes[0].set(xlabel="Epoch", ylabel="Training objective", title="Loss")
     axes[0].legend()
     axes[1].plot(epochs, [row["validation_accuracy"] for row in history], label="Accuracy")
     axes[1].plot(epochs, [row["validation_macro_f1"] for row in history], label="Macro F1")
@@ -108,11 +139,18 @@ def train_baseline(
     patience: int = 8,
     seed: int = 2026,
     device_name: str = "cpu",
+    imbalance_strategy: str = "weighted_ce",
+    focal_gamma: float = 2.0,
 ) -> dict[str, object]:
     """Train once on train, select on validation, and evaluate test once."""
 
     if epochs <= 0 or batch_size <= 0 or patience <= 0:
         raise ValueError("epochs, batch_size and patience must be positive")
+    if imbalance_strategy not in SUPPORTED_IMBALANCE_STRATEGIES:
+        raise ValueError(
+            f"unsupported imbalance strategy: {imbalance_strategy}; "
+            f"choose from {', '.join(SUPPORTED_IMBALANCE_STRATEGIES)}"
+        )
     _set_seed(seed)
     device = _resolve_device(device_name)
     output = Path(output_dir).expanduser()
@@ -146,23 +184,42 @@ def train_baseline(
             torch.from_numpy(matrices[mask]),
             torch.from_numpy(labels[mask]),
         )
+    train_labels = labels[split_masks["train"]]
+    train_counts = np.bincount(train_labels, minlength=len(class_names))
+    class_weights = len(tensors["train"]) / (len(class_names) * train_counts)
     generator = torch.Generator().manual_seed(seed)
-    loaders = {
-        "train": DataLoader(
-            tensors["train"],
-            batch_size=batch_size,
-            shuffle=True,
+    train_loader_arguments: dict[str, object] = {
+        "dataset": tensors["train"],
+        "batch_size": batch_size,
+    }
+    if imbalance_strategy == "balanced_sampler":
+        sample_weights = torch.tensor(
+            class_weights[train_labels], dtype=torch.double
+        )
+        train_loader_arguments["sampler"] = WeightedRandomSampler(
+            sample_weights,
+            num_samples=len(tensors["train"]),
+            replacement=True,
             generator=generator,
-        ),
+        )
+    else:
+        train_loader_arguments["shuffle"] = True
+        train_loader_arguments["generator"] = generator
+    loaders = {
+        "train": DataLoader(**train_loader_arguments),
         "validation": DataLoader(tensors["validation"], batch_size=batch_size),
         "test": DataLoader(tensors["test"], batch_size=batch_size),
     }
 
-    train_counts = np.bincount(labels[split_masks["train"]], minlength=len(class_names))
-    class_weights = len(tensors["train"]) / (len(class_names) * train_counts)
-    criterion = nn.CrossEntropyLoss(
-        weight=torch.tensor(class_weights, dtype=torch.float32, device=device)
+    class_weight_tensor = torch.tensor(
+        class_weights, dtype=torch.float32, device=device
     )
+    if imbalance_strategy == "weighted_ce":
+        criterion: nn.Module = nn.CrossEntropyLoss(weight=class_weight_tensor)
+    elif imbalance_strategy == "balanced_sampler":
+        criterion = nn.CrossEntropyLoss()
+    else:
+        criterion = FocalLoss(alpha=class_weight_tensor, gamma=focal_gamma)
     model = MicroCCNN(matrices.shape[1], len(class_names)).to(device)
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=learning_rate, weight_decay=weight_decay
@@ -249,6 +306,8 @@ def train_baseline(
         "channel_std": channel_std.reshape(-1).tolist(),
         "input_shape": list(matrices.shape[1:]),
         "replicate_mode": "channels",
+        "imbalance_strategy": imbalance_strategy,
+        "focal_gamma": focal_gamma,
     }
     torch.save(checkpoint, output / "model.pt")
 
@@ -264,6 +323,8 @@ def train_baseline(
         "device": str(device),
         "seed": seed,
         "replicate_mode": "two_replicates_as_channels",
+        "imbalance_strategy": imbalance_strategy,
+        "focal_gamma": focal_gamma,
         "class_names": class_names,
         "class_weights": {
             name: float(class_weights[index]) for index, name in enumerate(class_names)

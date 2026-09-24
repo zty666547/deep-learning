@@ -1,6 +1,7 @@
 import pytest
 
 from microc_foundation.experiments import (
+    summarize_resolution_results,
     summarize_seed_results,
     summarize_strategy_results,
 )
@@ -58,3 +59,21 @@ def test_strategy_summary_keeps_each_strategy_separate():
 def test_strategy_summary_requires_at_least_one_strategy():
     with pytest.raises(ValueError, match="at least one strategy"):
         summarize_strategy_results({})
+
+
+def test_resolution_summary_sorts_numeric_resolutions():
+    summary = summarize_resolution_results(
+        {
+            320: [_result(1, 0.5, 0.4, 0.25)],
+            80: [_result(1, 0.6, 0.5, 0.50)],
+        }
+    )
+    assert list(summary["resolutions"]) == ["80", "320"]
+    assert summary["resolutions"]["80"]["aggregate"]["test_accuracy"][
+        "mean"
+    ] == pytest.approx(0.6)
+
+
+def test_resolution_summary_requires_positive_resolution():
+    with pytest.raises(ValueError, match="positive"):
+        summarize_resolution_results({0: [_result(1, 0.5, 0.4, 0.25)]})

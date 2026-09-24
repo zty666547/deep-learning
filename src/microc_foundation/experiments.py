@@ -174,3 +174,88 @@ def write_strategy_comparison(summary: dict[str, object], output_dir: str) -> Pa
     figure.savefig(output / "strategy_comparison.png", dpi=180)
     plt.close(figure)
     return output
+
+
+def summarize_resolution_results(
+    resolution_results: dict[int, list[dict[str, object]]],
+) -> dict[str, object]:
+    """Aggregate repeated runs for each pooled genomic resolution."""
+
+    if not resolution_results:
+        raise ValueError("at least one resolution result is required")
+    if any(resolution <= 0 for resolution in resolution_results):
+        raise ValueError("resolutions must be positive")
+    summaries = {
+        str(resolution): summarize_seed_results(results)
+        for resolution, results in sorted(resolution_results.items())
+    }
+    class_orders = {tuple(summary["class_names"]) for summary in summaries.values()}
+    if len(class_orders) != 1:
+        raise ValueError("all resolutions must use the same class order")
+    return {"resolutions": summaries, "class_names": list(next(iter(class_orders)))}
+
+
+def write_resolution_comparison(summary: dict[str, object], output_dir: str) -> Path:
+    """Write JSON, CSV and a figure for a pooled-resolution comparison."""
+
+    output = Path(output_dir).expanduser()
+    output.mkdir(parents=True, exist_ok=True)
+    (output / "comparison.json").write_text(
+        json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
+    class_names = summary["class_names"]
+    rows: list[dict[str, object]] = []
+    for resolution, resolution_summary in summary["resolutions"].items():
+        row: dict[str, object] = {
+            "pooled_bin_size_bp": int(resolution),
+            "num_runs": resolution_summary["num_runs"],
+        }
+        aggregate = resolution_summary["aggregate"]
+        for metric in _METRICS:
+            for statistic in ("mean", "std"):
+                row[f"test_{metric}_{statistic}"] = aggregate[f"test_{metric}"][
+                    statistic
+                ]
+        for class_name in class_names:
+            for statistic in ("mean", "std"):
+                row[f"test_recall_{class_name}_{statistic}"] = aggregate[
+                    f"test_recall_{class_name}"
+                ][statistic]
+        rows.append(row)
+    with (output / "comparison.csv").open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+
+    resolutions = [str(row["pooled_bin_size_bp"]) for row in rows]
+    metric_keys = ["test_macro_f1", *[f"test_recall_{name}" for name in class_names]]
+    labels = ["Macro F1", *[f"{name} recall" for name in class_names]]
+    x_positions = np.arange(len(resolutions))
+    width = 0.8 / len(metric_keys)
+    figure, axis = plt.subplots(figsize=(10, 5), constrained_layout=True)
+    for index, (metric, label) in enumerate(zip(metric_keys, labels)):
+        aggregate_values = [
+            summary["resolutions"][resolution]["aggregate"][metric]
+            for resolution in resolutions
+        ]
+        offset = (index - (len(metric_keys) - 1) / 2) * width
+        axis.bar(
+            x_positions + offset,
+            [value["mean"] for value in aggregate_values],
+            width,
+            yerr=[value["std"] for value in aggregate_values],
+            capsize=3,
+            label=label,
+        )
+    axis.set(
+        xticks=x_positions,
+        xticklabels=[f"{resolution} bp" for resolution in resolutions],
+        xlabel="Pooled bin size",
+        ylabel="Test score (mean ± sample SD)",
+        title="Task 1 pooled-resolution comparison",
+        ylim=(0, 1),
+    )
+    axis.legend(ncol=2)
+    figure.savefig(output / "resolution_comparison.png", dpi=180)
+    plt.close(figure)
+    return output

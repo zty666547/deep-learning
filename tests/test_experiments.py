@@ -4,6 +4,7 @@ from microc_foundation.experiments import (
     summarize_resolution_results,
     summarize_seed_results,
     summarize_strategy_results,
+    summarize_window_results,
 )
 
 
@@ -77,3 +78,21 @@ def test_resolution_summary_sorts_numeric_resolutions():
 def test_resolution_summary_requires_positive_resolution():
     with pytest.raises(ValueError, match="positive"):
         summarize_resolution_results({0: [_result(1, 0.5, 0.4, 0.25)]})
+
+
+def test_window_summary_sorts_numeric_window_sizes():
+    summary = summarize_window_results(
+        {
+            30_720: [_result(1, 0.5, 0.4, 0.25)],
+            10_240: [_result(1, 0.6, 0.5, 0.50)],
+        }
+    )
+    assert list(summary["window_sizes"]) == ["10240", "30720"]
+    assert summary["window_sizes"]["10240"]["aggregate"]["test_accuracy"][
+        "mean"
+    ] == pytest.approx(0.6)
+
+
+def test_window_summary_requires_positive_window_size():
+    with pytest.raises(ValueError, match="positive"):
+        summarize_window_results({0: [_result(1, 0.5, 0.4, 0.25)]})

@@ -236,12 +236,27 @@ python scripts/compare_resolutions.py \
 
 脚本会先验证三份数据的结构ID、标签、划分和窗口坐标完全对齐，再进行训练。当前结果中160 bp的Macro F1为 `0.4999 ± 0.0168`，高于80和320 bp，因此继续作为默认分辨率。
 
+固定160 bp分辨率并比较10,240、20,480和30,720 bp窗口时，应先用最大窗口生成统一无泄漏划分，再按 `--pool-factor 16` 构建三份数据。随后运行：
+
+```bash
+python scripts/compare_window_sizes.py \
+  --dataset 10240=data/processed/task1_windows_10240bp_160bp.npz \
+  --dataset 20480=data/processed/task1_windows_20480bp_160bp.npz \
+  --dataset 30720=data/processed/task1_windows_30720bp_160bp.npz \
+  --output-dir outputs/task1_window_comparison \
+  --seeds 2026 2027 2028 \
+  --imbalance-strategy focal --focal-gamma 2.0 \
+  --epochs 40 --patience 8 --device cpu
+```
+
+脚本核对样本和池化分辨率，并记录“标注长度超过窗口”的类别数量。10,240 bp的Macro F1最高，但会截断17条标注；20,480 bp覆盖全部标注且类别表现更均衡，因此仍作为默认窗口。
+
 ## 下一轮建议
 
 1. 核对论文/实践方案中的坐标起点约定，确认是否需要 1-based 到 0-based 转换；
-2. 保持160 bp分辨率不变，比较不同窗口大小，避免与本轮池化分辨率变量混淆；
-3. 比较双重复作为通道、独立样本或一致性约束的方案；
-4. 结合更多随机种子复核Focal Loss与160 bp配置，并检查CHID错误样本；
+2. 比较双重复作为通道、独立样本或一致性约束的方案；
+3. 对CHID错误样本做按标注长度、位置和窗口内容分层检查；
+4. 结合更多随机种子复核Focal Loss与160 bp/20,480 bp默认配置；
 5. 增加更稳定的显著性方法和跨种子解释一致性分析。
 
 ## 开发记录

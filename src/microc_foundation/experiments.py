@@ -176,28 +176,36 @@ def write_strategy_comparison(summary: dict[str, object], output_dir: str) -> Pa
     return output
 
 
-def summarize_resolution_results(
-    resolution_results: dict[int, list[dict[str, object]]],
+def _summarize_numeric_parameter_results(
+    parameter_results: dict[int, list[dict[str, object]]],
+    *,
+    group_key: str,
+    parameter_name: str,
 ) -> dict[str, object]:
-    """Aggregate repeated runs for each pooled genomic resolution."""
-
-    if not resolution_results:
-        raise ValueError("at least one resolution result is required")
-    if any(resolution <= 0 for resolution in resolution_results):
-        raise ValueError("resolutions must be positive")
+    if not parameter_results:
+        raise ValueError(f"at least one {parameter_name} result is required")
+    if any(value <= 0 for value in parameter_results):
+        raise ValueError(f"{parameter_name} values must be positive")
     summaries = {
-        str(resolution): summarize_seed_results(results)
-        for resolution, results in sorted(resolution_results.items())
+        str(value): summarize_seed_results(results)
+        for value, results in sorted(parameter_results.items())
     }
     class_orders = {tuple(summary["class_names"]) for summary in summaries.values()}
     if len(class_orders) != 1:
-        raise ValueError("all resolutions must use the same class order")
-    return {"resolutions": summaries, "class_names": list(next(iter(class_orders)))}
+        raise ValueError(f"all {parameter_name} values must use the same class order")
+    return {group_key: summaries, "class_names": list(next(iter(class_orders)))}
 
 
-def write_resolution_comparison(summary: dict[str, object], output_dir: str) -> Path:
-    """Write JSON, CSV and a figure for a pooled-resolution comparison."""
-
+def _write_numeric_parameter_comparison(
+    summary: dict[str, object],
+    output_dir: str,
+    *,
+    group_key: str,
+    value_column: str,
+    xlabel: str,
+    title: str,
+    figure_name: str,
+) -> Path:
     output = Path(output_dir).expanduser()
     output.mkdir(parents=True, exist_ok=True)
     (output / "comparison.json").write_text(
@@ -205,12 +213,12 @@ def write_resolution_comparison(summary: dict[str, object], output_dir: str) -> 
     )
     class_names = summary["class_names"]
     rows: list[dict[str, object]] = []
-    for resolution, resolution_summary in summary["resolutions"].items():
+    for value, value_summary in summary[group_key].items():
         row: dict[str, object] = {
-            "pooled_bin_size_bp": int(resolution),
-            "num_runs": resolution_summary["num_runs"],
+            value_column: int(value),
+            "num_runs": value_summary["num_runs"],
         }
-        aggregate = resolution_summary["aggregate"]
+        aggregate = value_summary["aggregate"]
         for metric in _METRICS:
             for statistic in ("mean", "std"):
                 row[f"test_{metric}_{statistic}"] = aggregate[f"test_{metric}"][
@@ -227,16 +235,15 @@ def write_resolution_comparison(summary: dict[str, object], output_dir: str) -> 
         writer.writeheader()
         writer.writerows(rows)
 
-    resolutions = [str(row["pooled_bin_size_bp"]) for row in rows]
+    values = [str(row[value_column]) for row in rows]
     metric_keys = ["test_macro_f1", *[f"test_recall_{name}" for name in class_names]]
     labels = ["Macro F1", *[f"{name} recall" for name in class_names]]
-    x_positions = np.arange(len(resolutions))
+    x_positions = np.arange(len(values))
     width = 0.8 / len(metric_keys)
     figure, axis = plt.subplots(figsize=(10, 5), constrained_layout=True)
     for index, (metric, label) in enumerate(zip(metric_keys, labels)):
         aggregate_values = [
-            summary["resolutions"][resolution]["aggregate"][metric]
-            for resolution in resolutions
+            summary[group_key][value]["aggregate"][metric] for value in values
         ]
         offset = (index - (len(metric_keys) - 1) / 2) * width
         axis.bar(
@@ -249,13 +256,65 @@ def write_resolution_comparison(summary: dict[str, object], output_dir: str) -> 
         )
     axis.set(
         xticks=x_positions,
-        xticklabels=[f"{resolution} bp" for resolution in resolutions],
-        xlabel="Pooled bin size",
+        xticklabels=[f"{value} bp" for value in values],
+        xlabel=xlabel,
         ylabel="Test score (mean ± sample SD)",
-        title="Task 1 pooled-resolution comparison",
+        title=title,
         ylim=(0, 1),
     )
     axis.legend(ncol=2)
-    figure.savefig(output / "resolution_comparison.png", dpi=180)
+    figure.savefig(output / figure_name, dpi=180)
     plt.close(figure)
     return output
+
+
+def summarize_resolution_results(
+    resolution_results: dict[int, list[dict[str, object]]],
+) -> dict[str, object]:
+    """Aggregate repeated runs for each pooled genomic resolution."""
+
+    return _summarize_numeric_parameter_results(
+        resolution_results,
+        group_key="resolutions",
+        parameter_name="resolution",
+    )
+
+
+def write_resolution_comparison(summary: dict[str, object], output_dir: str) -> Path:
+    """Write JSON, CSV and a figure for a pooled-resolution comparison."""
+
+    return _write_numeric_parameter_comparison(
+        summary,
+        output_dir,
+        group_key="resolutions",
+        value_column="pooled_bin_size_bp",
+        xlabel="Pooled bin size",
+        title="Task 1 pooled-resolution comparison",
+        figure_name="resolution_comparison.png",
+    )
+
+
+def summarize_window_results(
+    window_results: dict[int, list[dict[str, object]]],
+) -> dict[str, object]:
+    """Aggregate repeated runs for each genomic window size."""
+
+    return _summarize_numeric_parameter_results(
+        window_results,
+        group_key="window_sizes",
+        parameter_name="window size",
+    )
+
+
+def write_window_comparison(summary: dict[str, object], output_dir: str) -> Path:
+    """Write JSON, CSV and a figure for a genomic-window comparison."""
+
+    return _write_numeric_parameter_comparison(
+        summary,
+        output_dir,
+        group_key="window_sizes",
+        value_column="window_size_bp",
+        xlabel="Genomic window size",
+        title="Task 1 genomic-window comparison",
+        figure_name="window_comparison.png",
+    )

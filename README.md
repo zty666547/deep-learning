@@ -264,12 +264,22 @@ python scripts/analyze_errors.py \
 
 输出包括逐样本预测CSV、JSON摘要、稳定错误图和CHID案例图，并自动检测测试集跨类别标注重叠。当前发现41条测试样本中13条稳定错误、14对跨类别标注重叠，详见 [`docs/task1-error-analysis.md`](docs/task1-error-analysis.md)。
 
+对全部结构标注执行跨类别重叠审计：
+
+```bash
+python scripts/audit_annotation_overlaps.py \
+  --structures data/processed/structures_split.csv \
+  --output-dir outputs/task1_overlap_audit
+```
+
+程序输出重叠对、逐结构冲突清单、冲突组件和区域级多标签清单。全量结果为111对跨类别重叠，涉及145/344条结构；直接删除会使验证和测试CHID归零，因此不运行失去类别覆盖的“清洗模型”。详见 [`docs/task1-overlap-audit.md`](docs/task1-overlap-audit.md)。
+
 ## 下一轮建议
 
 1. 核对论文/实践方案中的坐标起点约定，确认是否需要 1-based 到 0-based 转换；
-2. 对全数据集生成跨类别重叠清单，比较排除冲突、按区域分组评估和多标签建模；
-3. 在标签策略明确后，比较双重复作为通道、独立样本或一致性约束的方案；
-4. 结合更多随机种子复核Focal Loss与160 bp/20,480 bp默认配置；
+2. 基于233个冲突感知区域构建三标签任务，沿用20,480 bp窗口和160 bp分辨率；
+3. 在多标签基线稳定后，比较双重复作为通道、独立样本或一致性约束的方案；
+4. 将互斥三分类保留为历史基线，不与多标签指标直接混用；
 5. 增加更稳定的显著性方法和跨种子解释一致性分析。
 
 ## 开发记录

@@ -69,3 +69,5 @@ python scripts/analyze_errors.py \
 - 测试集仅4条CHID，以上结论是工程诊断和建模风险提示，不是统计显著性或生物学结论。
 
 本地输出 `outputs/task1_error_analysis/` 包含逐样本CSV、JSON摘要、稳定性图和CHID案例图；真实数据及完整模型仍由Git忽略。
+
+后续全量审计确认，344条结构中145条涉及跨类别重叠，验证和测试CHID全部冲突，因此不能通过简单删除冲突样本继续三分类。完整结果与区域级多标签方案见 [`docs/task1-overlap-audit.md`](task1-overlap-audit.md)。

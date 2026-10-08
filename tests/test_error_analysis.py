@@ -1,10 +1,7 @@
 import numpy as np
 import pytest
 
-from microc_foundation.error_analysis import (
-    find_cross_class_annotation_overlaps,
-    summarize_prediction_stability,
-)
+from microc_foundation.error_analysis import summarize_prediction_stability
 
 
 def test_prediction_stability_groups_and_consensus():
@@ -31,53 +28,3 @@ def test_prediction_stability_rejects_misaligned_shapes():
             np.array([[0, 1]]),
             np.ones((1, 1, 2)),
         )
-
-
-def test_cross_class_annotation_overlaps_exclude_same_class_and_touching():
-    rows = [
-        {
-            "structure_id": "A",
-            "true_class": "CHID",
-            "chrom": "chr1",
-            "annotation_start": 10,
-            "annotation_end": 30,
-        },
-        {
-            "structure_id": "B",
-            "true_class": "CHIN",
-            "chrom": "chr1",
-            "annotation_start": 20,
-            "annotation_end": 40,
-        },
-        {
-            "structure_id": "C",
-            "true_class": "CHID",
-            "chrom": "chr1",
-            "annotation_start": 25,
-            "annotation_end": 35,
-        },
-        {
-            "structure_id": "D",
-            "true_class": "OPCID",
-            "chrom": "chr1",
-            "annotation_start": 40,
-            "annotation_end": 50,
-        },
-    ]
-    overlaps = find_cross_class_annotation_overlaps(rows)
-    assert overlaps == [
-        {
-            "left_structure_id": "A",
-            "left_class": "CHID",
-            "right_structure_id": "B",
-            "right_class": "CHIN",
-            "overlap_bp": 10,
-        },
-        {
-            "left_structure_id": "B",
-            "left_class": "CHIN",
-            "right_structure_id": "C",
-            "right_class": "CHID",
-            "overlap_bp": 10,
-        },
-    ]

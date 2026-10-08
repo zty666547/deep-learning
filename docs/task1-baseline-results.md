@@ -142,3 +142,5 @@ Focal Loss在本轮三次运行中取得最高且波动最小的Macro F1，因�
 ## 稳定错误诊断
 
 对Focal Loss三个随机种子逐样本比较后，41条测试样本中23条稳定正确、5条随种子变化、13条稳定错误。CHID四例中仅 `CHID_25`稳定正确，其余三例均被稳定预测为CHIN。进一步检查发现测试集中有14对跨类别标注重叠，部分“错误”来自同一局部区域被赋予不同类别。完整案例、重叠关系和限制见 [`docs/task1-error-analysis.md`](task1-error-analysis.md)。
+
+全量标注审计进一步发现111对跨类别重叠，涉及145/344条结构；验证和测试CHID全部处于冲突区域，直接删除冲突样本不可行。详见 [`docs/task1-overlap-audit.md`](task1-overlap-audit.md)。

@@ -15,6 +15,7 @@ import numpy as np
 import torch
 
 from .model import MicroCCNN
+from .overlaps import find_cross_class_annotation_overlaps
 
 
 def summarize_prediction_stability(
@@ -66,37 +67,6 @@ def summarize_prediction_stability(
         "stability_group": stability_group,
         "mean_probabilities": mean_probabilities,
     }
-
-
-def find_cross_class_annotation_overlaps(
-    rows: list[dict[str, object]],
-) -> list[dict[str, object]]:
-    """Return positive-length annotation overlaps between different classes."""
-
-    overlaps: list[dict[str, object]] = []
-    for left_index, left in enumerate(rows):
-        for right in rows[left_index + 1 :]:
-            if left["chrom"] != right["chrom"]:
-                continue
-            if left["true_class"] == right["true_class"]:
-                continue
-            overlap_start = max(
-                int(left["annotation_start"]), int(right["annotation_start"])
-            )
-            overlap_end = min(
-                int(left["annotation_end"]), int(right["annotation_end"])
-            )
-            if overlap_start < overlap_end:
-                overlaps.append(
-                    {
-                        "left_structure_id": left["structure_id"],
-                        "left_class": left["true_class"],
-                        "right_structure_id": right["structure_id"],
-                        "right_class": right["true_class"],
-                        "overlap_bp": overlap_end - overlap_start,
-                    }
-                )
-    return overlaps
 
 
 def _load_checkpoint_predictions(

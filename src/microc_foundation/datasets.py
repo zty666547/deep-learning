@@ -182,3 +182,130 @@ def build_structure_dataset(
         ),
     )
     return output
+
+
+def prepare_multilabel_regions(
+    regions: pd.DataFrame,
+) -> tuple[pd.DataFrame, list[str], np.ndarray]:
+    """Validate conflict-aware regions and encode semicolon-delimited labels."""
+
+    required = {"region_id", "chrom", "start", "end", "label_set", "splits"}
+    missing = sorted(required.difference(regions.columns))
+    if missing:
+        raise ValueError(f"regions are missing columns: {', '.join(missing)}")
+    if regions.empty:
+        raise ValueError("regions contain no rows")
+    if regions["region_id"].astype(str).duplicated().any():
+        raise ValueError("region_id values must be unique")
+
+    selected = regions.copy()
+    selected["region_id"] = selected["region_id"].astype(str)
+    selected["chrom"] = selected["chrom"].astype(str)
+    selected["split"] = selected["splits"].astype(str)
+    if selected["split"].str.contains(";", regex=False).any():
+        raise ValueError("a region cannot span more than one data split")
+    if (selected["end"].astype(int) <= selected["start"].astype(int)).any():
+        raise ValueError("every region must have end greater than start")
+    selected["center"] = (
+        selected["start"].astype("int64") + selected["end"].astype("int64")
+    ) // 2
+
+    parsed_labels = [
+        sorted({value for value in str(label_set).split(";") if value})
+        for label_set in selected["label_set"]
+    ]
+    if any(not values for values in parsed_labels):
+        raise ValueError("every region must contain at least one label")
+    class_names = sorted({value for values in parsed_labels for value in values})
+    class_to_index = {name: index for index, name in enumerate(class_names)}
+    targets = np.zeros((len(selected), len(class_names)), dtype="float32")
+    for row_index, values in enumerate(parsed_labels):
+        for value in values:
+            targets[row_index, class_to_index[value]] = 1.0
+    return selected, class_names, targets
+
+
+def build_multilabel_region_dataset(
+    cool_paths: Iterable[str],
+    regions: pd.DataFrame,
+    output_path: str,
+    *,
+    window_size_bp: int = 20_480,
+    pool_factor: int = 16,
+    pooling: str = "sum",
+    normalization: str = "log1p",
+    balance: bool = False,
+) -> Path:
+    """Extract fixed windows for conflict-aware, potentially multi-label regions."""
+
+    selected, class_names, targets = prepare_multilabel_regions(regions)
+    paths = [str(Path(path).expanduser()) for path in cool_paths]
+    if not paths:
+        raise ValueError("at least one COOL path is required")
+    if window_size_bp <= 0:
+        raise ValueError("window_size_bp must be positive")
+
+    matrices_by_replicate: list[np.ndarray] = []
+    windows: list[GenomicWindow] | None = None
+    bin_size: int | None = None
+    for path in paths:
+        replicate_matrices: list[np.ndarray] = []
+        replicate_windows: list[GenomicWindow] = []
+        with open_cooler(path) as cool:
+            current_bin_size = int(cool.binsize)
+            if window_size_bp % current_bin_size:
+                raise ValueError("window_size_bp must be divisible by the COOL bin size")
+            if bin_size is None:
+                bin_size = current_bin_size
+            elif current_bin_size != bin_size:
+                raise ValueError("all COOL files must use the same bin size")
+            window_bins = window_size_bp // current_bin_size
+            if window_bins % pool_factor:
+                raise ValueError("window bin count must be divisible by pool_factor")
+
+            for row in selected.itertuples(index=False):
+                window = aligned_window_from_center(
+                    cool, str(row.chrom), int(row.center), window_bins
+                )
+                matrix, _ = fetch_window(cool, window, balance=balance, fill_value=0.0)
+                if matrix.shape != (window_bins, window_bins):
+                    raise ValueError(
+                        f"Unexpected matrix shape {matrix.shape} for {row.region_id}"
+                    )
+                pooled = pool_square_matrix(matrix, pool_factor, method=pooling)
+                replicate_matrices.append(
+                    normalize_matrix(pooled, method=normalization).astype("float32")
+                )
+                replicate_windows.append(window)
+
+        if windows is None:
+            windows = replicate_windows
+        elif replicate_windows != windows:
+            raise ValueError("replicates produced different genomic windows")
+        matrices_by_replicate.append(np.stack(replicate_matrices))
+
+    tensor = np.stack(matrices_by_replicate, axis=1)
+    output = Path(output_path).expanduser()
+    output.parent.mkdir(parents=True, exist_ok=True)
+    assert windows is not None and bin_size is not None
+    np.savez_compressed(
+        output,
+        matrices=tensor,
+        region_id=selected["region_id"].to_numpy(dtype=str),
+        targets=targets,
+        class_names=np.asarray(class_names, dtype=str),
+        label_set=selected["label_set"].astype(str).to_numpy(dtype=str),
+        chrom=selected["chrom"].to_numpy(dtype=str),
+        annotation_start=selected["start"].astype("int64").to_numpy(),
+        annotation_end=selected["end"].astype("int64").to_numpy(),
+        center=selected["center"].astype("int64").to_numpy(),
+        window_start=np.array([window.start for window in windows], dtype="int64"),
+        window_end=np.array([window.end for window in windows], dtype="int64"),
+        replicate=np.asarray([Path(path).stem for path in paths], dtype=str),
+        source_bin_size=np.array(bin_size, dtype="int64"),
+        pooled_bin_size=np.array(bin_size * pool_factor, dtype="int64"),
+        normalization=np.array(normalization),
+        pooling=np.array(pooling),
+        split=selected["split"].to_numpy(dtype=str),
+    )
+    return output

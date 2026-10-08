@@ -72,3 +72,76 @@ def classification_metrics(
         "per_class": per_class,
         "confusion_matrix": matrix.tolist(),
     }
+
+
+def multilabel_metrics(
+    targets: np.ndarray,
+    predictions: np.ndarray,
+    class_names: list[str],
+) -> dict[str, object]:
+    """Calculate per-label and aggregate metrics for binary label vectors."""
+
+    true = np.asarray(targets, dtype=int)
+    predicted = np.asarray(predictions, dtype=int)
+    expected_shape = (true.shape[0], len(class_names)) if true.ndim == 2 else None
+    if true.shape != predicted.shape:
+        raise ValueError("targets and predictions must have the same shape")
+    if true.ndim != 2 or true.shape != expected_shape:
+        raise ValueError("targets must have one column per class name")
+    if not np.isin(true, (0, 1)).all() or not np.isin(predicted, (0, 1)).all():
+        raise ValueError("targets and predictions must be binary")
+
+    per_label: dict[str, dict[str, float | int]] = {}
+    f1_values: list[float] = []
+    total_tp = total_fp = total_fn = 0
+    for index, class_name in enumerate(class_names):
+        label_true = true[:, index]
+        label_predicted = predicted[:, index]
+        true_positive = int(((label_true == 1) & (label_predicted == 1)).sum())
+        false_positive = int(((label_true == 0) & (label_predicted == 1)).sum())
+        false_negative = int(((label_true == 1) & (label_predicted == 0)).sum())
+        true_negative = int(((label_true == 0) & (label_predicted == 0)).sum())
+        precision = (
+            true_positive / (true_positive + false_positive)
+            if true_positive + false_positive
+            else 0.0
+        )
+        recall = (
+            true_positive / (true_positive + false_negative)
+            if true_positive + false_negative
+            else 0.0
+        )
+        f1 = (
+            2 * precision * recall / (precision + recall)
+            if precision + recall
+            else 0.0
+        )
+        f1_values.append(f1)
+        total_tp += true_positive
+        total_fp += false_positive
+        total_fn += false_negative
+        per_label[class_name] = {
+            "support": int(label_true.sum()),
+            "precision": precision,
+            "recall": recall,
+            "f1": f1,
+            "true_positive": true_positive,
+            "false_positive": false_positive,
+            "false_negative": false_negative,
+            "true_negative": true_negative,
+        }
+
+    micro_precision = total_tp / (total_tp + total_fp) if total_tp + total_fp else 0.0
+    micro_recall = total_tp / (total_tp + total_fn) if total_tp + total_fn else 0.0
+    micro_f1 = (
+        2 * micro_precision * micro_recall / (micro_precision + micro_recall)
+        if micro_precision + micro_recall
+        else 0.0
+    )
+    return {
+        "macro_f1": float(np.mean(f1_values)) if f1_values else 0.0,
+        "micro_f1": micro_f1,
+        "exact_match_ratio": float(np.all(true == predicted, axis=1).mean()),
+        "hamming_loss": float((true != predicted).mean()),
+        "per_label": per_label,
+    }

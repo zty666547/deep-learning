@@ -274,13 +274,37 @@ python scripts/audit_annotation_overlaps.py \
 
 程序输出重叠对、逐结构冲突清单、冲突组件和区域级多标签清单。全量结果为111对跨类别重叠，涉及145/344条结构；直接删除会使验证和测试CHID归零，因此不运行失去类别覆盖的“清洗模型”。详见 [`docs/task1-overlap-audit.md`](docs/task1-overlap-audit.md)。
 
+### 区域级多标签基线
+
+跨类别重叠审计生成的233个区域可直接用于多标签建模。每个区域分别预测CHID、CHIN、OPCID三个二元标签；阈值只在验证集选择，再原样用于测试集，避免测试集参与调参。
+
+```bash
+python scripts/build_multilabel_dataset.py \
+  --cool data/raw/GSE272159_37C_rep1.mapq_30.10.cool \
+  --cool data/raw/GSE272159_37C_rep2.mapq_30.10.cool \
+  --regions outputs/task1_overlap_audit/region_groups.csv \
+  --output data/processed/task1_multilabel_regions.npz \
+  --window-size-bp 20480 \
+  --pool-factor 16
+
+python scripts/run_multilabel_seed_sweep.py \
+  --dataset data/processed/task1_multilabel_regions.npz \
+  --output-dir outputs/task1_multilabel \
+  --seeds 2026 2027 2028 \
+  --epochs 40 \
+  --patience 8 \
+  --device cpu
+```
+
+本次真实数据三次运行的测试Macro F1为 `0.6439 ± 0.0546`，Micro F1为 `0.8037 ± 0.0118`，精确匹配率为 `0.5309 ± 0.0214`。指标属于区域级多标签问题，不能与前面的互斥三分类Accuracy直接比较。完整定义、逐标签结果和限制见 [`docs/task1-multilabel-results.md`](docs/task1-multilabel-results.md)。
+
 ## 下一轮建议
 
-1. 核对论文/实践方案中的坐标起点约定，确认是否需要 1-based 到 0-based 转换；
-2. 基于233个冲突感知区域构建三标签任务，沿用20,480 bp窗口和160 bp分辨率；
-3. 在多标签基线稳定后，比较双重复作为通道、独立样本或一致性约束的方案；
-4. 将互斥三分类保留为历史基线，不与多标签指标直接混用；
-5. 增加更稳定的显著性方法和跨种子解释一致性分析。
+1. 转入任务二，沿全基因组对角线按固定步长生成候选窗口；
+2. 过滤低计数、缺失过多和边界不完整窗口，并保存质检原因；
+3. 提取接触强度、距离衰减、对称性和局部纹理等可解释特征；
+4. 使用训练集拟合的标准化与降维流程聚类，排除与已知区域明显重叠的候选；
+5. 在rep1和rep2分别复算候选特征，按预先写明的规则保留跨重复一致候选。
 
 ## 开发记录
 

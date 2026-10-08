@@ -324,13 +324,31 @@ python scripts/scan_candidate_windows.py \
 
 真实数据共生成1,807个完整窗口，全部通过基础完整性与稀疏度检查；窗口级rep1/rep2相关性中位数为0.9124。这里的“通过质检”只表示数据可用于后续分析，不表示窗口属于新结构。详见 [`docs/task2-window-scan.md`](docs/task2-window-scan.md)。
 
+候选聚类与筛选：
+
+```bash
+python scripts/cluster_candidate_windows.py \
+  --windows outputs/task2_window_scan/candidate_windows.csv \
+  --structures data/processed/structures.csv \
+  --output-dir outputs/task2_clustering \
+  --k-min 2 \
+  --k-max 8 \
+  --seed 2026 \
+  --min-replicate-correlation 0.9 \
+  --novelty-quantile 0.9 \
+  --maximum-start-gap-bp 5120 \
+  --minimum-support 2
+```
+
+PCA保留3个主成分并解释95.14%的特征方差；轮廓系数在 `k=3` 时最高，为0.4167。严格规则先排除任何已知结构重叠窗口，再要求重复相关性不低于0.9和特征新颖度位于合格窗口前10%，最后合并相邻命中并要求至少两个窗口支持。本次得到35个候选窗口和6个疑似候选区域。详见 [`docs/task2-clustering-results.md`](docs/task2-clustering-results.md)。
+
 ## 下一轮建议
 
-1. 转入任务二，沿全基因组对角线按固定步长生成候选窗口；
-2. 过滤低计数、缺失过多和边界不完整窗口，并保存质检原因；
-3. 提取接触强度、距离衰减、对称性和局部纹理等可解释特征；
-4. 使用训练集拟合的标准化与降维流程聚类，排除与已知区域明显重叠的候选；
-5. 在rep1和rep2分别复算候选特征，按预先写明的规则保留跨重复一致候选。
+1. 为6个疑似候选区域生成rep1/rep2并排热图和代表窗口特征表；
+2. 检查相邻候选合并是否对步长与新颖度分位数敏感，避免只报告单一人为阈值；
+3. 对照已知结构窗口的特征分布，解释候选与CHID、CHIN、OPCID的主要区别；
+4. 将候选结果保守表述为计算筛选结果，不作未经实验验证的生物学命名；
+5. 任务二封板后转入任务三多轨道可视化。
 
 ## 开发记录
 

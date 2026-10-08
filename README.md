@@ -298,6 +298,23 @@ python scripts/run_multilabel_seed_sweep.py \
 
 本次真实数据三次运行的测试Macro F1为 `0.6439 ± 0.0546`，Micro F1为 `0.8037 ± 0.0118`，精确匹配率为 `0.5309 ± 0.0214`。指标属于区域级多标签问题，不能与前面的互斥三分类Accuracy直接比较。完整定义、逐标签结果和限制见 [`docs/task1-multilabel-results.md`](docs/task1-multilabel-results.md)。
 
+### 任务二：全基因组候选扫描
+
+首轮扫描使用两个真实重复的相同坐标窗口，提取接触强度、距离衰减、近对角线/远距离比值、对称性和稀疏度等特征，之后进行标准化、PCA和K-means。候选必须同时满足：质量通过、与已知结构无区间重叠、两个重复相关系数至少0.3、所属簇至少包含3个窗口。
+
+```bash
+python scripts/scan_novel_structures.py \
+  --cool data/raw/GSE272159_37C_rep1.mapq_30.10.cool \
+  --cool data/raw/GSE272159_37C_rep2.mapq_30.10.cool \
+  --structures data/processed/structures.csv \
+  --output-dir outputs/task2_novel_scan \
+  --window-size-bp 20480 --step-bp 20480 --pool-factor 16 \
+  --num-clusters 8 --min-replicate-correlation 0.3 \
+  --min-cluster-size 3 --top-k 8
+```
+
+本次扫描生成226个窗口、8个候选区域和每个候选的rep1/rep2热图。候选只是待复核对象，不代表已验证的新结构；详细规则和坐标见 [`docs/task2-novel-structure-results.md`](docs/task2-novel-structure-results.md)。
+
 ## 任务二：全基因组候选窗口扫描
 
 任务二先将10 bp COOL池化到160 bp，再以20,480 bp窗口和2,560 bp步长沿染色体对角线扫描。每个窗口同时计算两份生物学重复的接触强度、距离衰减、中心富集、稀疏度、纹理和重复相关性等可解释特征。

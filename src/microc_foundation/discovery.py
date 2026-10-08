@@ -21,6 +21,8 @@ FEATURE_NAMES = (
     "std_contact",
     "max_contact",
     "nonzero_fraction",
+    "zero_bin_fraction",
+    "largest_zero_run_fraction",
     "diagonal_mean",
     "near_band_mean",
     "mid_band_mean",
@@ -144,6 +146,12 @@ def extract_contact_features(matrix: np.ndarray, eps: float = 1e-8) -> dict[str,
         ].mean()
     )
     positive = cleaned[cleaned > 0]
+    zero_bins = cleaned.sum(axis=1) <= 0
+    largest_zero_run = 0
+    current_zero_run = 0
+    for is_zero in zero_bins:
+        current_zero_run = current_zero_run + 1 if is_zero else 0
+        largest_zero_run = max(largest_zero_run, current_zero_run)
     if total > 0 and len(positive):
         probabilities = positive / positive.sum()
         entropy = float(-(probabilities * np.log(probabilities + eps)).sum())
@@ -158,6 +166,8 @@ def extract_contact_features(matrix: np.ndarray, eps: float = 1e-8) -> dict[str,
         "std_contact": std,
         "max_contact": float(cleaned.max()),
         "nonzero_fraction": float((cleaned > 0).mean()),
+        "zero_bin_fraction": float(zero_bins.mean()),
+        "largest_zero_run_fraction": largest_zero_run / len(cleaned),
         "diagonal_mean": diagonal_mean,
         "near_band_mean": near_mean,
         "mid_band_mean": mid_mean,
@@ -194,6 +204,8 @@ def scan_replicate_windows(
     min_total_contacts: float = 1.0,
     min_nonzero_fraction: float = 0.01,
     min_finite_fraction: float = 0.99,
+    max_zero_bin_fraction: float = 0.03,
+    max_zero_run_fraction: float = 0.03,
 ) -> list[dict[str, object]]:
     """Scan identical diagonal windows across replicates and calculate features."""
 
@@ -201,7 +213,13 @@ def scan_replicate_windows(
         raise ValueError("at least two biological replicates are required")
     if min_total_contacts < 0:
         raise ValueError("minimum total contacts must be non-negative")
-    if not 0 <= min_nonzero_fraction <= 1 or not 0 <= min_finite_fraction <= 1:
+    fractions = (
+        min_nonzero_fraction,
+        min_finite_fraction,
+        max_zero_bin_fraction,
+        max_zero_run_fraction,
+    )
+    if any(value < 0 or value > 1 for value in fractions):
         raise ValueError("fraction thresholds must lie in [0, 1]")
 
     with ExitStack() as stack:
@@ -239,6 +257,10 @@ def scan_replicate_windows(
                     quality_reasons.append(f"rep{replicate_index}_sparse")
                 if values["finite_fraction"] < min_finite_fraction:
                     quality_reasons.append(f"rep{replicate_index}_missing")
+                if values["zero_bin_fraction"] > max_zero_bin_fraction:
+                    quality_reasons.append(f"rep{replicate_index}_zero_bins")
+                if values["largest_zero_run_fraction"] > max_zero_run_fraction:
+                    quality_reasons.append(f"rep{replicate_index}_zero_run")
 
             row: dict[str, object] = {
                 "window_id": f"window_{index:05d}",

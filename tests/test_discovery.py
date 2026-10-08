@@ -31,6 +31,17 @@ def test_contact_features_capture_intensity_and_decay():
     assert features["near_band_mean"] > features["mid_band_mean"]
     assert features["decay_slope"] < 0
     assert 0 <= features["contact_entropy"] <= 1
+    assert features["zero_bin_fraction"] == 0
+    assert features["largest_zero_run_fraction"] == 0
+
+
+def test_contact_features_detect_consecutive_zero_bins():
+    matrix = np.ones((8, 8), dtype=float)
+    matrix[2:4, :] = 0
+    matrix[:, 2:4] = 0
+    features = extract_contact_features(matrix)
+    assert features["zero_bin_fraction"] == 0.25
+    assert features["largest_zero_run_fraction"] == 0.25
 
 
 def test_matrix_correlation_uses_log_upper_triangle():

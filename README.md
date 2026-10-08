@@ -298,6 +298,32 @@ python scripts/run_multilabel_seed_sweep.py \
 
 本次真实数据三次运行的测试Macro F1为 `0.6439 ± 0.0546`，Micro F1为 `0.8037 ± 0.0118`，精确匹配率为 `0.5309 ± 0.0214`。指标属于区域级多标签问题，不能与前面的互斥三分类Accuracy直接比较。完整定义、逐标签结果和限制见 [`docs/task1-multilabel-results.md`](docs/task1-multilabel-results.md)。
 
+## 任务二：全基因组候选窗口扫描
+
+任务二先将10 bp COOL池化到160 bp，再以20,480 bp窗口和2,560 bp步长沿染色体对角线扫描。每个窗口同时计算两份生物学重复的接触强度、距离衰减、中心富集、稀疏度、纹理和重复相关性等可解释特征。
+
+```bash
+python scripts/coarsen_microc.py \
+  --input data/raw/GSE272159_37C_rep1.mapq_30.10.cool \
+  --output data/processed/GSE272159_37C_rep1.160bp.cool \
+  --factor 16
+
+python scripts/coarsen_microc.py \
+  --input data/raw/GSE272159_37C_rep2.mapq_30.10.cool \
+  --output data/processed/GSE272159_37C_rep2.160bp.cool \
+  --factor 16
+
+python scripts/scan_candidate_windows.py \
+  --cool data/processed/GSE272159_37C_rep1.160bp.cool \
+  --cool data/processed/GSE272159_37C_rep2.160bp.cool \
+  --chrom NC_000913.3 \
+  --output-dir outputs/task2_window_scan \
+  --window-size-bp 20480 \
+  --stride-bp 2560
+```
+
+真实数据共生成1,807个完整窗口，全部通过基础完整性与稀疏度检查；窗口级rep1/rep2相关性中位数为0.9124。这里的“通过质检”只表示数据可用于后续分析，不表示窗口属于新结构。详见 [`docs/task2-window-scan.md`](docs/task2-window-scan.md)。
+
 ## 下一轮建议
 
 1. 转入任务二，沿全基因组对角线按固定步长生成候选窗口；

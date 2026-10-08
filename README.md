@@ -251,11 +251,24 @@ python scripts/compare_window_sizes.py \
 
 脚本核对样本和池化分辨率，并记录“标注长度超过窗口”的类别数量。10,240 bp的Macro F1最高，但会截断17条标注；20,480 bp覆盖全部标注且类别表现更均衡，因此仍作为默认窗口。
 
+对多个随机种子模型做逐样本稳定错误分析：
+
+```bash
+python scripts/analyze_errors.py \
+  --dataset data/processed/task1_windows_full.npz \
+  --checkpoint outputs/task1_imbalance_comparison/focal/seed_2026/model.pt \
+  --checkpoint outputs/task1_imbalance_comparison/focal/seed_2027/model.pt \
+  --checkpoint outputs/task1_imbalance_comparison/focal/seed_2028/model.pt \
+  --output-dir outputs/task1_error_analysis
+```
+
+输出包括逐样本预测CSV、JSON摘要、稳定错误图和CHID案例图，并自动检测测试集跨类别标注重叠。当前发现41条测试样本中13条稳定错误、14对跨类别标注重叠，详见 [`docs/task1-error-analysis.md`](docs/task1-error-analysis.md)。
+
 ## 下一轮建议
 
 1. 核对论文/实践方案中的坐标起点约定，确认是否需要 1-based 到 0-based 转换；
-2. 比较双重复作为通道、独立样本或一致性约束的方案；
-3. 对CHID错误样本做按标注长度、位置和窗口内容分层检查；
+2. 对全数据集生成跨类别重叠清单，比较排除冲突、按区域分组评估和多标签建模；
+3. 在标签策略明确后，比较双重复作为通道、独立样本或一致性约束的方案；
 4. 结合更多随机种子复核Focal Loss与160 bp/20,480 bp默认配置；
 5. 增加更稳定的显著性方法和跨种子解释一致性分析。
 

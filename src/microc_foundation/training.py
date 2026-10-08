@@ -306,6 +306,7 @@ def train_baseline(
         "channel_std": channel_std.reshape(-1).tolist(),
         "input_shape": list(matrices.shape[1:]),
         "replicate_mode": "channels",
+        "seed": seed,
         "imbalance_strategy": imbalance_strategy,
         "focal_gamma": focal_gamma,
     }

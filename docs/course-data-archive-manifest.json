@@ -1,0 +1,135 @@
+{
+  "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE272nnn/GSE272161/suppl/GSE272161_RAW.tar",
+  "archive_size_bytes": 4980326400,
+  "metadata_bytes_read": 11264,
+  "num_files": 21,
+  "files": [
+    {
+      "name": "GSM8950761_DstpA_rep1.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 141016850,
+      "header_offset": 0,
+      "data_offset": 512
+    },
+    {
+      "name": "GSM8950762_DstpA_rep2.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 142970528,
+      "header_offset": 141017600,
+      "data_offset": 141018112
+    },
+    {
+      "name": "GSM8950763_DhnsDstpA_rep1.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 183628977,
+      "header_offset": 283988992,
+      "data_offset": 283989504
+    },
+    {
+      "name": "GSM8950764_DhnsDstpA_rep2.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 243377378,
+      "header_offset": 467618816,
+      "data_offset": 467619328
+    },
+    {
+      "name": "GSM8950765_NoLig_rep1.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 13020105,
+      "header_offset": 710996992,
+      "data_offset": 710997504
+    },
+    {
+      "name": "GSM8950767_37C_37C_fix_rep1.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 141006710,
+      "header_offset": 724017664,
+      "data_offset": 724018176
+    },
+    {
+      "name": "GSM8950768_RT_RT_fix_rep1.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 137223862,
+      "header_offset": 865025024,
+      "data_offset": 865025536
+    },
+    {
+      "name": "GSM8950769_bleo_rep1.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 172677680,
+      "header_offset": 1002249728,
+      "data_offset": 1002250240
+    },
+    {
+      "name": "GSM8950770_bleo_rep2.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 180562893,
+      "header_offset": 1174928384,
+      "data_offset": 1174928896
+    },
+    {
+      "name": "GSM8950771_novo25.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 181730130,
+      "header_offset": 1355491840,
+      "data_offset": 1355492352
+    },
+    {
+      "name": "GSM8950772_novo250.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 163109217,
+      "header_offset": 1537222656,
+      "data_offset": 1537223168
+    },
+    {
+      "name": "GSM8950773_cipro0025.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 146985366,
+      "header_offset": 1700332544,
+      "data_offset": 1700333056
+    },
+    {
+      "name": "GSM8950774_cipro025.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 137518522,
+      "header_offset": 1847318528,
+      "data_offset": 1847319040
+    },
+    {
+      "name": "GSM8950775_net20.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 157284671,
+      "header_offset": 1984837632,
+      "data_offset": 1984838144
+    },
+    {
+      "name": "GSM8950776_net200.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 160603542,
+      "header_offset": 2142123008,
+      "data_offset": 2142123520
+    },
+    {
+      "name": "GSM8950777_muk_rep1.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 95643140,
+      "header_offset": 2302727168,
+      "data_offset": 2302727680
+    },
+    {
+      "name": "GSM8950778_muk_rep2.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 132649089,
+      "header_offset": 2398371328,
+      "data_offset": 2398371840
+    },
+    {
+      "name": "GSM9078280_FIS_mut_rep1.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 563688886,
+      "header_offset": 2531021312,
+      "data_offset": 2531021824
+    },
+    {
+      "name": "GSM9078281_FIS_mut_rep2.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 608111367,
+      "header_offset": 3094710784,
+      "data_offset": 3094711296
+    },
+    {
+      "name": "GSM9678478_HNS_mut_rep1.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 678658675,
+      "header_offset": 3702822912,
+      "data_offset": 3702823424
+    },
+    {
+      "name": "GSM9678479_HNS_mut_rep2.MG1655.mapq_30.10.cool.gz",
+      "size_bytes": 598837701,
+      "header_offset": 4381482496,
+      "data_offset": 4381483008
+    }
+  ],
+  "complete": true
+}

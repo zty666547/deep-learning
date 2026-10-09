@@ -74,13 +74,16 @@ def main() -> int:
         "docs/task5-super-resolution-results.md",
         "docs/quality-review.md",
         "docs/project-walkthrough.md",
+        "docs/task2-replication-audit.md",
+        "docs/task2-candidate-registry.csv",
     )
     missing = [path for path in required_docs if not Path(path).is_file()]
     if missing:
         raise SystemExit("Missing required documentation: " + ", ".join(missing))
     output_root = Path(arguments.output_root)
     summaries = {
-        "task2": output_root / "task2_candidate_validation/summary.json",
+        "task2": output_root / "task2_clustering/summary.json",
+        "task2_replication": output_root / "task2_replication_audit/summary.json",
         "task3": output_root / "task3_tracks/summary.json",
         "task5": output_root / "task5_corrected/summary.json",
     }
@@ -90,7 +93,8 @@ def main() -> int:
     loaded = {name: json.loads(path.read_text(encoding="utf-8")) for name, path in summaries.items()}
     task5 = validate_super_resolution_evidence(output_root / "task5_corrected")
     print("Evidence file check passed; course coverage and final delivery NOT certified")
-    print(f"task2 candidates={loaded['task2'].get('num_candidate_regions', 'see report')}")
+    print(f"task2 candidates={loaded['task2']['num_candidate_regions']}")
+    print(f"task2 replication_audited_windows={loaded['task2_replication']['num_windows']}")
     print(f"task3 windows={loaded['task3']['num_windows']}")
     print(f"task5 cnn_psnr={task5['aggregate']['cnn']['psnr']['mean']:.3f}")
     return 0

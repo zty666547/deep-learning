@@ -1,0 +1,108 @@
+{
+  "protocol": "task2-main-v1 descriptive within-window distance centering",
+  "bin_size_bp": 160,
+  "minimum_offset_bins": 5,
+  "minimum_distance_bp": 800,
+  "num_windows": 1498,
+  "num_candidate_regions": 5,
+  "groups": {
+    "candidate_neighborhood": {
+      "num_windows": 64,
+      "metrics": {
+        "full_log_correlation": {
+          "num_defined": 64,
+          "median": 0.9247457167555921,
+          "q25": 0.9092363648042295,
+          "q75": 0.9334168625833157
+        },
+        "offdiagonal_log_correlation": {
+          "num_defined": 64,
+          "median": 0.7816118336645074,
+          "q25": 0.6894805140848855,
+          "q75": 0.8153944155596462
+        },
+        "distance_centered_correlation": {
+          "num_defined": 64,
+          "median": 0.6787699679436039,
+          "q25": 0.5536734198514988,
+          "q75": 0.7230979932601769
+        }
+      }
+    },
+    "candidate_representative": {
+      "num_windows": 5,
+      "metrics": {
+        "full_log_correlation": {
+          "num_defined": 5,
+          "median": 0.9357007997802999,
+          "q25": 0.9330008728762785,
+          "q75": 0.9429441213202663
+        },
+        "offdiagonal_log_correlation": {
+          "num_defined": 5,
+          "median": 0.8558422362286002,
+          "q25": 0.8306253982315367,
+          "q75": 0.883217104149122
+        },
+        "distance_centered_correlation": {
+          "num_defined": 5,
+          "median": 0.7653520149797296,
+          "q25": 0.7446923066373329,
+          "q75": 0.7786858537013397
+        }
+      }
+    },
+    "known_overlap": {
+      "num_windows": 1100,
+      "metrics": {
+        "full_log_correlation": {
+          "num_defined": 1100,
+          "median": 0.9080687527658181,
+          "q25": 0.8953556302909702,
+          "q75": 0.9266786278289805
+        },
+        "offdiagonal_log_correlation": {
+          "num_defined": 1100,
+          "median": 0.6871756490762262,
+          "q25": 0.608353509184091,
+          "q75": 0.7811874660709177
+        },
+        "distance_centered_correlation": {
+          "num_defined": 1100,
+          "median": 0.5019439395598007,
+          "q25": 0.37672951236946073,
+          "q75": 0.6515396816348678
+        }
+      }
+    },
+    "unannotated_background": {
+      "num_windows": 329,
+      "metrics": {
+        "full_log_correlation": {
+          "num_defined": 329,
+          "median": 0.9055601027293942,
+          "q25": 0.8919351562900015,
+          "q75": 0.9221750515548671
+        },
+        "offdiagonal_log_correlation": {
+          "num_defined": 329,
+          "median": 0.6565171264283425,
+          "q25": 0.5725118897553273,
+          "q75": 0.7450334386522989
+        },
+        "distance_centered_correlation": {
+          "num_defined": 329,
+          "median": 0.4494351951571121,
+          "q25": 0.3261386575225036,
+          "q75": 0.6007238370694612
+        }
+      }
+    }
+  },
+  "limitations": [
+    "No candidate reselection",
+    "Background is not a biological negative control",
+    "Overlapping windows are not independent",
+    "Not genome-wide observed/expected normalization"
+  ]
+}

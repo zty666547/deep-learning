@@ -330,6 +330,20 @@ python scripts/plot_genome_tracks.py \
 
 全局图和五个候选局部图见 [`docs/task3-visualization-results.md`](docs/task3-visualization-results.md)。
 
+### 选做任务五：接触矩阵超分辨率
+
+使用160 bp窗口作为输入、80 bp窗口作为目标，按共同可用样本划分训练/验证/测试，比较双三次插值和轻量残差CNN。真实运行命令：
+
+```bash
+python scripts/run_super_resolution.py \
+  --low-dataset data/processed/task1_windows_20480bp_160bp.npz \
+  --high-dataset data/processed/task1_windows_80bp.npz \
+  --output-dir outputs/task5_super_resolution/seed_2026 \
+  --epochs 20 --batch-size 16 --patience 5 --seed 2026 --device cpu
+```
+
+本次固定种子测试结果：双三次PSNR/SSIM为 `14.685/0.755`，CNN为 `23.638/0.930`。完整限制与可视化见 [`docs/task5-super-resolution-results.md`](docs/task5-super-resolution-results.md)。
+
 ## 任务二：全基因组候选窗口扫描
 
 任务二先将10 bp COOL池化到160 bp，再以20,480 bp窗口和2,560 bp步长沿染色体对角线扫描。每个窗口同时计算两份生物学重复的接触强度、距离衰减、中心富集、稀疏度、纹理和重复相关性等可解释特征。

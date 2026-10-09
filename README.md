@@ -315,6 +315,21 @@ python scripts/scan_novel_structures.py \
 
 本次扫描生成226个窗口、8个候选区域和每个候选的rep1/rep2热图。候选只是待复核对象，不代表已验证的新结构；详细规则和坐标见 [`docs/task2-novel-structure-results.md`](docs/task2-novel-structure-results.md)。
 
+### 任务三：接触频率与结构分布可视化
+
+任务三使用任务二的1807个滑窗、344条已知结构和5个疑似候选，绘制rep1/rep2接触总量、重复差异、已知结构轨道和候选区域轨道。当前没有经过核验的MG1655基因注释文件，因此图中不伪造基因轨道。
+
+```bash
+python scripts/plot_genome_tracks.py \
+  --windows outputs/task2_window_scan/candidate_windows.csv \
+  --structures data/processed/structures.csv \
+  --candidate-regions outputs/task2_clustering/candidate_regions.csv \
+  --output-dir outputs/task3_tracks \
+  --local-candidate-ids candidate_001 candidate_002 candidate_003 candidate_004 candidate_005
+```
+
+全局图和五个候选局部图见 [`docs/task3-visualization-results.md`](docs/task3-visualization-results.md)。
+
 ## 任务二：全基因组候选窗口扫描
 
 任务二先将10 bp COOL池化到160 bp，再以20,480 bp窗口和2,560 bp步长沿染色体对角线扫描。每个窗口同时计算两份生物学重复的接触强度、距离衰减、中心富集、稀疏度、纹理和重复相关性等可解释特征。

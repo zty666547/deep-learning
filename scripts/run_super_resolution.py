@@ -3,6 +3,10 @@
 from __future__ import annotations
 
 import argparse
+import json
+from pathlib import Path
+
+import numpy as np
 
 from microc_foundation.super_resolution import train_super_resolution
 
@@ -16,23 +20,35 @@ def main() -> int:
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--patience", type=int, default=5)
     parser.add_argument("--seed", type=int, default=2026)
+    parser.add_argument("--seeds", type=int, nargs="+", help="Run a fixed multi-seed protocol")
     parser.add_argument("--device", default="cpu", choices=("cpu", "mps", "auto"))
     arguments = parser.parse_args()
-    result = train_super_resolution(
-        arguments.low_dataset,
-        arguments.high_dataset,
-        arguments.output_dir,
-        epochs=arguments.epochs,
-        batch_size=arguments.batch_size,
-        patience=arguments.patience,
-        seed=arguments.seed,
-        device_name=arguments.device,
-    )
-    print(
-        f"Saved {arguments.output_dir} | "
-        f"bicubic_psnr={result['bicubic_baseline']['psnr']:.3f} "
-        f"cnn_psnr={result['cnn']['psnr']:.3f}"
-    )
+    seeds = arguments.seeds or [arguments.seed]
+    if len(set(seeds)) != len(seeds):
+        raise ValueError("seeds must be unique")
+    results = []
+    for seed in seeds:
+        output = f"{arguments.output_dir}/seed_{seed}" if arguments.seeds else arguments.output_dir
+        result = train_super_resolution(
+            arguments.low_dataset, arguments.high_dataset, output,
+            epochs=arguments.epochs, batch_size=arguments.batch_size,
+            patience=arguments.patience, seed=seed, device_name=arguments.device,
+        )
+        results.append(result)
+        print(f"seed={seed} | bicubic_psnr={result['bicubic_baseline']['psnr']:.3f} "
+              f"cnn_psnr={result['cnn']['psnr']:.3f}", flush=True)
+    if arguments.seeds:
+        aggregate = {}
+        for method in ("bicubic_baseline", "cnn"):
+            aggregate[method] = {}
+            for metric in ("psnr", "ssim", "mse"):
+                values = np.asarray([result[method][metric] for result in results])
+                aggregate[method][metric] = {"mean": float(values.mean()),
+                                             "std": float(values.std(ddof=1)) if len(values) > 1 else 0.0}
+        Path(arguments.output_dir, "summary.json").write_text(
+            json.dumps({"seeds": seeds, "aggregate": aggregate, "runs": results}, indent=2),
+            encoding="utf-8",
+        )
     return 0
 
 

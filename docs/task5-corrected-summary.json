@@ -1,0 +1,147 @@
+{
+  "seeds": [
+    2026,
+    2027,
+    2028
+  ],
+  "aggregate": {
+    "bicubic_baseline": {
+      "psnr": {
+        "mean": 23.32920245568174,
+        "std": 0.0
+      },
+      "ssim": {
+        "mean": 0.4882756223035747,
+        "std": 0.0
+      },
+      "mse": {
+        "mean": 0.2084336131811142,
+        "std": 0.0
+      }
+    },
+    "cnn": {
+      "psnr": {
+        "mean": 23.66289638814779,
+        "std": 0.0018405572711042235
+      },
+      "ssim": {
+        "mean": 0.5128542181162845,
+        "std": 0.0008025899061906251
+      },
+      "mse": {
+        "mean": 0.19301140308380127,
+        "std": 7.910411630157307e-05
+      }
+    }
+  },
+  "runs": [
+    {
+      "status": "super_resolution_completed",
+      "seed": 2026,
+      "best_epoch": 20,
+      "epochs_ran": 20,
+      "device": "cpu",
+      "sample_counts": {
+        "train": 248,
+        "validation": 54,
+        "test": 41
+      },
+      "excluded_after_alignment": 1,
+      "input_shape": [
+        2,
+        128,
+        128
+      ],
+      "target_shape": [
+        2,
+        256,
+        256
+      ],
+      "protocol": "count-corrected factor-two; shared train-only scale; symmetric CNN",
+      "ssim_definition": "per-replicate 7x7 valid uniform-window SSIM, population moments",
+      "intensity_correction": "log1p(expm1(low_log_counts)/4)",
+      "bicubic_baseline": {
+        "psnr": 23.32920245568174,
+        "ssim": 0.4882756223035747,
+        "mse": 0.2084336131811142
+      },
+      "cnn": {
+        "psnr": 23.66339919360643,
+        "ssim": 0.513382346794872,
+        "mse": 0.19298890233039856
+      }
+    },
+    {
+      "status": "super_resolution_completed",
+      "seed": 2027,
+      "best_epoch": 20,
+      "epochs_ran": 20,
+      "device": "cpu",
+      "sample_counts": {
+        "train": 248,
+        "validation": 54,
+        "test": 41
+      },
+      "excluded_after_alignment": 1,
+      "input_shape": [
+        2,
+        128,
+        128
+      ],
+      "target_shape": [
+        2,
+        256,
+        256
+      ],
+      "protocol": "count-corrected factor-two; shared train-only scale; symmetric CNN",
+      "ssim_definition": "per-replicate 7x7 valid uniform-window SSIM, population moments",
+      "intensity_correction": "log1p(expm1(low_log_counts)/4)",
+      "bicubic_baseline": {
+        "psnr": 23.32920245568174,
+        "ssim": 0.4882756223035747,
+        "mse": 0.2084336131811142
+      },
+      "cnn": {
+        "psnr": 23.660856678657513,
+        "ssim": 0.5119306383248146,
+        "mse": 0.19309931993484497
+      }
+    },
+    {
+      "status": "super_resolution_completed",
+      "seed": 2028,
+      "best_epoch": 18,
+      "epochs_ran": 20,
+      "device": "cpu",
+      "sample_counts": {
+        "train": 248,
+        "validation": 54,
+        "test": 41
+      },
+      "excluded_after_alignment": 1,
+      "input_shape": [
+        2,
+        128,
+        128
+      ],
+      "target_shape": [
+        2,
+        256,
+        256
+      ],
+      "protocol": "count-corrected factor-two; shared train-only scale; symmetric CNN",
+      "ssim_definition": "per-replicate 7x7 valid uniform-window SSIM, population moments",
+      "intensity_correction": "log1p(expm1(low_log_counts)/4)",
+      "bicubic_baseline": {
+        "psnr": 23.32920245568174,
+        "ssim": 0.4882756223035747,
+        "mse": 0.2084336131811142
+      },
+      "cnn": {
+        "psnr": 23.664433292179428,
+        "ssim": 0.5132496692291668,
+        "mse": 0.19294598698616028
+      }
+    }
+  ]
+}

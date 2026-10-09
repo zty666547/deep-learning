@@ -1,6 +1,8 @@
 # 深度学习综合实践：Micro-C 数据处理底座
 
-本仓库用于《基于深度学习的接触矩阵处理实践方案》。第一轮建设项目结构、数据读取、局部窗口、基础归一化、结构标注读取、热图输出和任务一固定张量生成，不包含模型训练或实验结论。
+本仓库用于《基于深度学习的接触矩阵处理实践方案》，包含数据底座、已知结构识别、疑似候选发现、多轨道可视化与超分辨率初版实验。当前处于实验质量核验阶段，尚未全部验收或完成最终交付。
+
+先看[质量核验与剩余任务](docs/quality-review.md)，详细理解流程可看[项目讲解手册](docs/project-walkthrough.md)。下面“本轮范围”保留为第一轮底座说明，后续任务的命令见对应章节。
 
 ## 本轮范围
 
@@ -332,17 +334,17 @@ python scripts/plot_genome_tracks.py \
 
 ### 选做任务五：接触矩阵超分辨率
 
-使用160 bp窗口作为输入、80 bp窗口作为目标，按共同可用样本划分训练/验证/测试，比较双三次插值和轻量残差CNN。真实运行命令：
+使用160 bp窗口作为输入、80 bp窗口作为目标，校正粗像素求和的计数尺度，核对配对坐标并检查跨划分窗口重叠，比较双三次插值和轻量对称残差CNN。真实运行命令：
 
 ```bash
 python scripts/run_super_resolution.py \
   --low-dataset data/processed/task1_windows_20480bp_160bp.npz \
   --high-dataset data/processed/task1_windows_80bp.npz \
-  --output-dir outputs/task5_super_resolution/seed_2026 \
-  --epochs 20 --batch-size 16 --patience 5 --seed 2026 --device cpu
+  --output-dir outputs/task5_corrected \
+  --epochs 20 --batch-size 16 --patience 5 --seeds 2026 2027 2028 --device cpu
 ```
 
-本次固定种子测试结果：双三次PSNR/SSIM为 `14.685/0.755`，CNN为 `23.638/0.930`。完整限制与可视化见 [`docs/task5-super-resolution-results.md`](docs/task5-super-resolution-results.md)。
+公平校正后三种子测试：双三次PSNR/局部SSIM为 `23.329/0.4883`，CNN为 `23.6629 ± 0.0018 / 0.5129 ± 0.0008`（均值±种子间样本标准差）。这属于小幅内部重建改善；旧版未校正基线结果已撤回，不能继续用于报告。完整协议、限制与统一色标图见 [`docs/task5-super-resolution-results.md`](docs/task5-super-resolution-results.md)。
 
 ## 任务二：全基因组候选窗口扫描
 
@@ -388,13 +390,13 @@ python scripts/cluster_candidate_windows.py \
 
 PCA保留3个主成分并解释94.58%的特征方差；轮廓系数在 `k=2` 时最高，为0.4073。严格规则排除任何已知结构重叠窗口，要求重复相关性不低于0.9、新颖度位于合格窗口前10%，并要求至少两个相邻窗口支持。本次最终得到25个候选窗口和5个疑似区域；18组敏感性实验显示候选004最稳定。详见 [`docs/task2-clustering-results.md`](docs/task2-clustering-results.md)。
 
-## 当前收尾顺序
+## 当前核验与交付顺序
 
-1. 把任务一、任务二、任务三和任务五结果按 [`docs/report-outline.md`](docs/report-outline.md) 汇总为实验报告；
-2. 按 [`docs/video-script.md`](docs/video-script.md) 制作PPT并完成一次计时试录；
-3. 运行 `python scripts/check_submission.py`，确认结果摘要、图表和文档齐全；
-4. 根据组号、姓名和学号生成代码ZIP、报告和视频的最终文件名；
-5. 上传后三份文件分别重新下载核验，目标在2026年10月18日白天完成，不把23:59当作实际工作截止点。
+1. 先完成[质量清单](docs/quality-review.md)中的流程统一、关键对照与课程要求覆盖，再冻结结果；
+2. 把已核验结果按 [`docs/report-outline.md`](docs/report-outline.md) 汇总为实验报告；
+3. 按 [`docs/video-script.md`](docs/video-script.md) 制作PPT并完成逐步讲解与计时试录；
+4. 运行 `python scripts/check_submission.py`检查证据文件（不等于所有任务或最终交付验收），再做干净环境完整复现；
+5. 根据组号、姓名和学号命名代码ZIP、报告和视频，分别上传并重新下载核验，目标在2026年10月18日白天完成。
 
 ## 开发记录
 

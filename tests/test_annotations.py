@@ -2,6 +2,7 @@ import pandas as pd
 import pytest
 
 from microc_foundation.annotations import read_structures_csv, read_structures_excel
+from microc_foundation.coordinate_audit import audit_annotation_bin_alignment
 
 
 def test_reader_normalizes_common_column_aliases(tmp_path):
@@ -74,3 +75,46 @@ def test_excel_reader_merges_structure_sheets_and_maps_chromosome(monkeypatch, t
     assert result["center"].tolist() == [200, 450, 700]
     assert result["chrom"].unique().tolist() == ["NC_000913.3"]
     assert result["source_chrom"].unique().tolist() == ["MG1655"]
+
+
+def test_coordinate_audit_compares_direct_and_one_based_adjusted_boundaries():
+    structures = pd.DataFrame(
+        {
+            "structure_id": ["A", "B"],
+            "chrom": ["chr1", "chr1"],
+            "start": [10, 30],
+            "end": [30, 50],
+            "structure_type": ["CHIN", "OPCID"],
+        }
+    )
+    bins = pd.DataFrame(
+        {
+            "chrom": ["chr1"] * 5,
+            "start": [0, 10, 20, 30, 40],
+            "end": [10, 20, 30, 40, 50],
+        }
+    )
+
+    result = audit_annotation_bin_alignment(structures, bins, bin_size_bp=10)
+
+    assert result["both_direct_boundaries_count"] == 2
+    assert result["one_based_adjusted_start_boundary_count"] == 0
+    assert result["start_and_end_multiple_of_resolution_count"] == 2
+
+
+def test_coordinate_audit_rejects_wrong_reference_chromosome():
+    structures = pd.DataFrame(
+        {
+            "structure_id": ["A"],
+            "chrom": ["chr2"],
+            "start": [10],
+            "end": [20],
+            "structure_type": ["CHIN"],
+        }
+    )
+    bins = pd.DataFrame({"chrom": ["chr1"], "start": [0], "end": [10]})
+
+    result = audit_annotation_bin_alignment(structures, bins, bin_size_bp=10)
+
+    assert result["valid_bounds_count"] == 0
+    assert result["both_direct_boundaries_count"] == 0

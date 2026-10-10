@@ -49,4 +49,4 @@ python scripts/benchmark_discovery.py \
 
 必须用完整扫描表，不能误用25行候选表。`summary.json`记录输入SHA-256、参数、各折训练/测试ID、缩放与权重；`out_of_fold_windows.csv`记录预测；`annotation_coverage.csv`记录各阶段覆盖。审阅快照：[汇总JSON](task2-feature-benchmark-summary.json)、[对照图](task2-feature-controls.png)。原始矩阵与运行输出保持Git忽略。
 
-下一步预先固定新表征和验证协议，另行标识探索版本，保留本轮失败对照；已看过的测试折不能再声称全新未见。新簇成员/中心、独立簇归属验证与最终交付尚缺。标注坐标起点仍待来源核实，当前沿用现有标准化解释。
+下一步预先固定新表征和验证协议，另行标识探索版本，保留本轮失败对照；已看过的测试折不能再声称全新未见。新簇成员/中心、独立簇归属验证与最终交付尚缺。结构表坐标与COOL网格对齐的审计见[坐标核验](annotation-coordinate-audit.md)；来源未显式声明闭开规则，分析沿用有网格证据支持的标准化解释。

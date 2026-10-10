@@ -58,6 +58,8 @@ ruff check .
 
 - COOL 输入必须是单分辨率 `.cool` 或 `.cool.gz`；
 - 坐标统一使用 **0-based、左闭右开** 区间；
+- 课程结构标注的来源与真实 10 bp bin 对齐审计见 [`docs/annotation-coordinate-audit.md`](docs/annotation-coordinate-audit.md)；
+- 可重新检查原始 Excel 与 COOL bin 边界：`python scripts/audit_annotation_coordinates.py --workbook "data/raw/标注数据.xlsx" --cool data/raw/GSE272159_37C_rep1.mapq_30.10.cool --output outputs/task3/coordinate-audit-summary.json`；
 - `.cool.gz` 会在运行期间解压到系统临时目录，退出读取上下文后自动清理；
 - 默认读取 COOL 中的 balancing weight；若文件没有权重，命令中加 `--unbalanced` 读取原始计数。
 

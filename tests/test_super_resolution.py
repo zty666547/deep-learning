@@ -10,6 +10,7 @@ from microc_foundation.super_resolution import (
     local_ssim,
     psnr,
 )
+from microc_foundation.super_resolution_evaluation import evaluate_reconstructions
 
 
 def test_super_resolution_model_doubles_spatial_shape():
@@ -98,3 +99,34 @@ def test_paired_loader_rejects_genomic_overlap_across_splits(tmp_path):
 def test_local_ssim_rejects_nonfinite_values():
     with pytest.raises(ValueError, match="finite"):
         local_ssim(np.zeros((8, 8)), np.full((8, 8), np.nan))
+
+
+def test_structure_and_distance_evaluation_aggregates_repeated_seeds(tmp_path):
+    paths = []
+    target = np.zeros((2, 2, 256, 256), dtype=np.float32)
+    target[:, :, np.arange(256), np.arange(256)] = 1
+    for seed in (2026, 2027):
+        path = tmp_path / f"seed_{seed}" / "test_reconstruction.npz"
+        path.parent.mkdir()
+        np.savez_compressed(
+            path,
+            structure_id=np.array(["A", "B"]),
+            label=np.array(["CHIN", "OPCID"]),
+            chrom=np.array(["chr1", "chr1"]),
+            window_start=np.array([0, 20480]),
+            window_end=np.array([20480, 40960]),
+            annotation_start=np.array([0, 20480]),
+            annotation_end=np.array([20480, 40960]),
+            replicate=np.array(["rep1", "rep2"]),
+            target=target,
+            bicubic=np.zeros_like(target),
+            cnn=np.full_like(target, 0.5),
+        )
+        paths.append(str(path))
+
+    summary = evaluate_reconstructions(paths, str(tmp_path / "evaluation"))
+    assert summary["test_structure_count"] == 2
+    assert len(summary["distance_summary"]) == 10
+    assert len(summary["known_structure_summary"]) == 4
+    assert (tmp_path / "evaluation" / "summary.json").is_file()
+    assert (tmp_path / "evaluation" / "known_structure_metrics_by_sample.csv").is_file()

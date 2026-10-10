@@ -191,6 +191,16 @@ def load_aligned_super_resolution_data(low_path: str, high_path: str) -> dict[st
         return {
             "low": correct_count_scale(low, 2), "high": high, "split": splits,
             "ids": ids, "chrom": chroms, "start": starts, "end": ends,
+            "labels": low_data["labels"][low_indices].astype(str)
+            if "labels" in low_data.files
+            else np.full(len(ids), "unknown"),
+            "annotation_start": low_data["annotation_start"][low_indices].astype(np.int64)
+            if "annotation_start" in low_data.files
+            else np.full(len(ids), -1, dtype=np.int64),
+            "annotation_end": low_data["annotation_end"][low_indices].astype(np.int64)
+            if "annotation_end" in low_data.files
+            else np.full(len(ids), -1, dtype=np.int64),
+            "replicates": low_data["replicate"].astype(str),
         }
 
 
@@ -322,6 +332,21 @@ def train_super_resolution(
     target_original = high[split_masks["test"]]
     baseline_scores = _batch_metrics(target_original, baseline_original)
     model_scores = _batch_metrics(target_original, prediction_original)
+    test_indices = np.flatnonzero(split_masks["test"])
+    np.savez_compressed(
+        output / "test_reconstruction.npz",
+        structure_id=aligned["ids"][test_indices],
+        label=aligned["labels"][test_indices],
+        chrom=aligned["chrom"][test_indices],
+        window_start=aligned["start"][test_indices],
+        window_end=aligned["end"][test_indices],
+        annotation_start=aligned["annotation_start"][test_indices],
+        annotation_end=aligned["annotation_end"][test_indices],
+        replicate=aligned["replicates"],
+        target=target_original.astype("float32"),
+        bicubic=baseline_original.astype("float32"),
+        cnn=prediction_original.astype("float32"),
+    )
 
     torch.save(
         {

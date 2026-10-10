@@ -50,7 +50,7 @@
 
 ### 5.4 任务五
 
-引用 [`docs/task5-super-resolution-results.md`](task5-super-resolution-results.md)：校正后双三次PSNR/局部SSIM `23.329/0.4883`，CNN `23.6629 ± 0.0018 / 0.5129 ± 0.0008`；明确是三种子、同一测试划分的内部重建。提升约0.334 dB，不继续引用旧版不公平基线。种子标准差不等于数据置信区间。
+引用 [`docs/task5-super-resolution-results.md`](task5-super-resolution-results.md)：校正后双三次PSNR/局部SSIM `23.329/0.4883`，CNN `23.6629 ± 0.0018 / 0.5129 ± 0.0008`；明确是三种子、同一测试划分的内部重建。提升约0.334 dB，且去近对角线距离层及已知结构区间MSE均低于插值基线。不继续引用旧版不公平基线；种子标准差不等于数据置信区间，分层结果也不是生物学结构真实性证明。
 
 ## 6. 讨论、限制与成员分工
 

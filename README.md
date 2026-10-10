@@ -358,6 +358,14 @@ python scripts/run_super_resolution.py \
   --epochs 20 --batch-size 16 --patience 5 --seeds 2026 2027 2028 --device cpu
 ```
 
+保存测试集的完整高分辨率矩阵后，按基因组距离与已知结构区间复核重建误差：
+
+```bash
+python scripts/evaluate_super_resolution.py \
+  --reconstruction-dir outputs/task5_corrected \
+  --output-dir outputs/task5_structure_recovery
+```
+
 公平校正后三种子测试：双三次PSNR/局部SSIM为 `23.329/0.4883`，CNN为 `23.6629 ± 0.0018 / 0.5129 ± 0.0008`（均值±种子间样本标准差）。这属于小幅内部重建改善；旧版未校正基线结果已撤回，不能继续用于报告。完整协议、限制与统一色标图见 [`docs/task5-super-resolution-results.md`](docs/task5-super-resolution-results.md)。
 
 ## 任务二：唯一主流程（task2-main-v1）

@@ -1,31 +1,59 @@
-# 任务三：接触频率与结构分布可视化
+# 任务三：三条件全基因组接触与注释轨道
 
-## 一、图层设计
+更新日期：2026-10-10。已按原方案完成三实验条件、全基因组固定区间和四面板图。结果是描述性可视化，不是差异显著性检验。
 
-本轮采用单染色体 genome-browser 风格的多轨道图，所有轨道使用 `NC_000913.3` 的同一坐标轴：
+## 数据与样本核验
 
-1. rep1窗口接触总量原始曲线与9窗口中心滚动均值；
-2. rep2窗口接触总量原始曲线与滚动均值；
-3. `log2((rep1+1)/(rep2+1))` 重复差异轨道；
-4. CHID、CHIN、OPCID已知结构区间轨道；
-5. 任务二筛出的5个疑似候选区域轨道。
+| 条件 | GEO样本 | 重复 | 状态 |
+| --- | --- | ---: | --- |
+| WT 37°C | `GSE272159_37C_rep1/2` | 2 | 原有真实数据，10 bp，NC_000913.3，长度4,641,652 bp |
+| ΔstpA | `GSM8950761/0762` | 2 | GEO标题/基因型均确认，未处理，双重复 |
+| ΔhnsΔstpA | `GSM8950763/0764` | 2 | GEO标题/基因型均确认，未处理，双重复 |
 
-质量未通过的窗口用浅灰背景标出，避免把覆盖缺口误解成接触频率变化。当前没有经过核验的MG1655基因注释文件，因此明确不绘制基因位置。
+四份新增矩阵从GEO公开补充文件逐一下载。下载文件大小与远程TAR清单一致；本地SHA-256记录在忽略目录 `outputs/task3/condition-data-receipt.json`。四份都通过GZIP完整性检查、COOL/HDF5读取、`NC_000913.3`参考、4,641,652 bp长度和10 bp分辨率验证。接触计数总和分别为108,552,379、109,486,541、141,567,539和185,894,502。原有WT的计数总和为368,695,972和358,452,621。
 
-## 二、真实数据结果
+若需重新取得新增样本，下载脚本会核对归档清单中的预期字节数、HTTP续传范围、GEO样本号及基因型，并在最终文件名生效前完成压缩流和COOL检查：
 
-图中使用1807个20,480 bp滑窗，其中1498个通过任务二最终质量控制；已知结构数量为CHID 26、CHIN 250、OPCID 68；候选区域数量为5。rep1和rep2的全局趋势整体一致，但在部分区段存在明显的局部差异，适合作为后续条件比较和候选复核的背景轨道。
+```bash
+python scripts/download_course_conditions.py \
+  --archive-manifest docs/course-data-archive-manifest.json \
+  --output-dir data/raw \
+  --receipt outputs/task3/condition-data-receipt.json
+```
 
-![全基因组多轨道图](figures/task3_genome_multitrack.png)
+在线表格中的原始染色体名称为`MG1655`，绘图前统一映射到`NC_000913.3`。结构坐标按当前项目读取器的坐标约定直接使用；工作簿原始起点究竟为0-based还是1-based仍需回到其来源说明核实。因此，覆盖位置的边界解释保留这一项限制。
 
-![候选区域局部多轨道图](figures/task3_candidate_local_tracks.png)
+## 处理与绘图
 
-候选局部图中蓝色和橙色曲线分别为两个重复，黄色区域为候选区间，浅色竖带为附近已知结构。candidate_002、candidate_003和candidate_004的两个重复在候选区间附近具有相近的局部形态；这只能说明计算复现性较好，不能单独证明新的生物学结构。
+1. 六份10 bp矩阵都按16×16块求和池化到160 bp；池化保持接触计数总和。
+2. 对每个160 bp bin，沿环状染色体统计与其中心距离不超过10 kb的非对角线接触。接触强度除以对应样本全库计数和，再乘一百万，得到CPM。这个量用于校正文库总量差异，不校正基因组距离或局部覆盖，也不是RNA表达。
+3. 每个条件先等权平均两个生物学重复；灰色均值再等权平均三种条件。这样不会因ΔhnsΔstpA第二重复计数更多而在条件平均中获得额外权重。
+4. 使用RefSeq `GCF_000005845.2` GFF3，校验参考名称与染色体长度；将1-based闭区间转换成0-based左闭右开区间，仅绘制gene feature，并把明确标记的环状跨原点基因拆成两段。共解析4,506个基因ID。
+5. 每张图共享x轴，依次显示三条件曲线及灰色均值、条件均值信号、蓝色基因位置、橙色CHIN/OPCID区间及标签。CHID不属于方案要求的此轨道，因此不绘制。
 
-## 三、复现与限制
+染色体长4,641,652 bp，被连续切成465个10 kb区间；最后一段为4,641,000–4,641,652 bp。清单验证所有区间无重叠、无间隙，末端恰好到染色体长度。图像位于Git忽略目录 `outputs/task3/condition-comparison/tiles/`，索引为`manifest.json`；`condition_tracks.csv`保存每个bin的三条件信号及重复标准差，`provenance.json`记录样本路径、分辨率、计数和方法参数。处理矩阵位于忽略目录 `data/processed/task3-160bp/`。
 
-- 复现命令见README中的任务三小节；输出摘要保存在 `outputs/task3_tracks/summary.json`。
-- 候选只使用`task2-main-v1`的5个坐标，不使用历史8候选；身份见[候选登记表](task2-candidate-registry.csv)。
-- 滚动均值只用于视觉降噪，不参与任务二候选打分。
-- 全局图中的接触总量受窗口覆盖和测序深度影响，不能直接当作绝对接触概率。
-- 当前仅完成同条件双重复的位置与信号展示，尚缺基因及不同实验条件图层；应依据原方案核验要求，不能据此宣称任务三全部达标。缺少的数据和截止安排见[质量清单](quality-review.md)。
+## 复现命令
+
+```bash
+python scripts/prepare_annotations.py \
+  --input data/raw/标注数据.xlsx \
+  --output data/processed/structures.csv \
+  --chrom-map MG1655=NC_000913.3
+
+python scripts/plot_condition_tracks.py \
+  --wt-rep1 data/raw/GSE272159_37C_rep1.mapq_30.10.cool \
+  --wt-rep2 data/raw/GSE272159_37C_rep2.mapq_30.10.cool \
+  --dstpa-rep1 data/raw/GSM8950761_DstpA_rep1.MG1655.mapq_30.10.cool.gz \
+  --dstpa-rep2 data/raw/GSM8950762_DstpA_rep2.MG1655.mapq_30.10.cool.gz \
+  --double-rep1 data/raw/GSM8950763_DhnsDstpA_rep1.MG1655.mapq_30.10.cool.gz \
+  --double-rep2 data/raw/GSM8950764_DhnsDstpA_rep2.MG1655.mapq_30.10.cool.gz \
+  --gff data/raw/NC_000913.3.gff.gz \
+  --structures data/processed/structures.csv \
+  --output-dir outputs/task3/condition-comparison \
+  --coarsened-dir data/processed/task3-160bp
+```
+
+## 结论边界
+
+三种条件和图层完整覆盖了原方案任务三的主要展示要求。CPM曲线差异只能作为区域浏览线索，未做统计检验或条件效应因果解释；特别是各条件只有两个生物学重复。工作簿坐标起点约定仍是任务三正式验收前需要确认的风险。输出图已检查空白区与含注释区示例；正式报告应使用具体坐标案例并逐一解释，不应把图上的强弱差异写成已证实的生物学效应。

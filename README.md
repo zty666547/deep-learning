@@ -4,7 +4,7 @@
 
 先看[质量核验与剩余任务](docs/quality-review.md)，详细理解流程可看[项目讲解手册](docs/project-walkthrough.md)。下面“本轮范围”保留为第一轮底座说明，后续任务的命令见对应章节。
 
-2026-10-09已重新取得并核对15页课程原方案，确认任务三至少3条件及4面板等要求；助教更新的多条件TAR已核验公开归档目录，包含21份压缩COOL。实际来源、目录、坐标约定和未完成项见[原要求与新增数据核验](docs/course-requirements-audit.md)。目录检查不等于矩阵已下载/验证。
+2026-10-10已按课程要求下载并校验WT 37°C、ΔstpA、ΔhnsΔstpA各双重复，生成覆盖全染色体的任务三4面板分段图。来源、方法和边界见[任务三结果说明](docs/task3-visualization-results.md)与[原要求核验](docs/course-requirements-audit.md)。
 
 ## 本轮范围
 
@@ -321,18 +321,30 @@ python scripts/scan_novel_structures.py \
 
 ### 任务三：接触频率与结构分布可视化
 
-任务三使用任务二的1807个滑窗、344条已知结构和5个疑似候选，绘制rep1/rep2接触总量、重复差异、已知结构轨道和候选区域轨道。当前没有经过核验的MG1655基因注释文件，因此图中不伪造基因轨道。
+更新版按原方案展示三种条件。使用WT 37°C、ΔstpA和ΔhnsΔstpA各两个生物学重复。先将10 bp矩阵求和池化至160 bp，再以每个bin为中心统计环状基因组上±10 kb内的非对角线接触，并按全库计数做CPM归一化。每种条件先平均两个重复；灰色曲线是三种条件均值。该信号用于可视化比较，不是RNA表达量、距离校正或显著性检验。
+
+先把工作簿统一成结构表，再运行当前三条件全基因组流程：
 
 ```bash
-python scripts/plot_genome_tracks.py \
-  --windows outputs/task2_window_scan/candidate_windows.csv \
+python scripts/prepare_annotations.py \
+  --input data/raw/标注数据.xlsx \
+  --output data/processed/structures.csv \
+  --chrom-map MG1655=NC_000913.3
+
+python scripts/plot_condition_tracks.py \
+  --wt-rep1 data/raw/GSE272159_37C_rep1.mapq_30.10.cool \
+  --wt-rep2 data/raw/GSE272159_37C_rep2.mapq_30.10.cool \
+  --dstpa-rep1 data/raw/GSM8950761_DstpA_rep1.MG1655.mapq_30.10.cool.gz \
+  --dstpa-rep2 data/raw/GSM8950762_DstpA_rep2.MG1655.mapq_30.10.cool.gz \
+  --double-rep1 data/raw/GSM8950763_DhnsDstpA_rep1.MG1655.mapq_30.10.cool.gz \
+  --double-rep2 data/raw/GSM8950764_DhnsDstpA_rep2.MG1655.mapq_30.10.cool.gz \
+  --gff data/raw/NC_000913.3.gff.gz \
   --structures data/processed/structures.csv \
-  --candidate-regions outputs/task2_clustering/candidate_regions.csv \
-  --output-dir outputs/task3_tracks \
-  --local-candidate-ids candidate_001 candidate_002 candidate_003 candidate_004 candidate_005
+  --output-dir outputs/task3/condition-comparison \
+  --coarsened-dir data/processed/task3-160bp
 ```
 
-全局图和五个候选局部图见 [`docs/task3-visualization-results.md`](docs/task3-visualization-results.md)。
+该流程生成465张连续10 kb分段PNG、轨道CSV、来源/参数JSON及覆盖清单。旧版窗口候选图仅用于历史结果浏览，不满足当前三条件展示要求。完整方法、样本登记和限制见 [`docs/task3-visualization-results.md`](docs/task3-visualization-results.md)。
 
 ### 选做任务五：接触矩阵超分辨率
 

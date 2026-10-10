@@ -427,6 +427,8 @@ python scripts/audit_candidate_replication.py \
 
 稳定身份格式为`task2-main-v1:染色体:起点-终点`，跨版本引用必须同时给坐标，不能只写`candidate_004`。核验协议和结果见[重复一致性专项核验](docs/task2-replication-audit.md)。
 
+在此基础上，对固定5个候选做了WT、ΔstpA及ΔhnsΔstpA的描述性纹理迁移审查；候选坐标未重选，也不作突变因果解释。协议和结果见[跨条件专项审查](docs/task2-condition-transfer-audit.md)。
+
 已知覆盖与背景对照（独立核验，不重新筛候选）：
 
 ```bash

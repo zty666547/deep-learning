@@ -429,6 +429,8 @@ python scripts/audit_candidate_replication.py \
 
 在此基础上，对固定5个候选做了WT、ΔstpA及ΔhnsΔstpA的描述性纹理迁移审查；候选坐标未重选，也不作突变因果解释。协议和结果见[跨条件专项审查](docs/task2-condition-transfer-audit.md)。
 
+又在固定候选区间上直接从10 bp原始矩阵进行局部求和池化，检查80/160/320 bp的尺度敏感性；粗分辨率会提高相关，不能据此夸大结构稳定性。见[分辨率稳健性审查](docs/task2-resolution-audit.md)。
+
 已知覆盖与背景对照（独立核验，不重新筛候选）：
 
 ```bash

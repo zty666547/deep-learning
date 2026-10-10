@@ -84,3 +84,21 @@ def test_audit_rejects_candidate_id_with_wrong_coordinates(tiny_audit, tmp_path)
     candidates.loc[0, "chrom"] = "wrong-chrom"
     with pytest.raises(ValueError, match="coordinates"):
         audit_replicate_consistency(paths, windows, candidates, str(tmp_path / "outputs"))
+
+
+def test_audit_records_library_cpm_normalization(tiny_audit, tmp_path):
+    paths, windows, candidates = tiny_audit
+    summary = audit_replicate_consistency(
+        paths, windows, candidates, str(tmp_path / "outputs"), normalization="library_cpm",
+    )
+    assert summary["normalization"] == "library_cpm"
+    assert len(summary["library_total_contact_counts"]) == 2
+    assert all(value > 0 for value in summary["library_total_contact_counts"])
+
+
+def test_audit_rejects_unsupported_normalization(tiny_audit, tmp_path):
+    paths, windows, candidates = tiny_audit
+    with pytest.raises(ValueError, match="normalization"):
+        audit_replicate_consistency(
+            paths, windows, candidates, str(tmp_path / "outputs"), normalization="balanced",
+        )

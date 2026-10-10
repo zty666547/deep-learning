@@ -80,6 +80,7 @@ def plot_replication_audit(table: pd.DataFrame, output: Path, minimum_distance_b
 def audit_replicate_consistency(
     cool_paths: list[str], windows: pd.DataFrame, candidates: pd.DataFrame,
     output_dir: str, *, minimum_offset: int = 5,
+    normalization: str = "raw_counts",
 ) -> dict:
     """Audit all QC-passed windows without reselecting candidates from results."""
     if len(cool_paths) != 2:
@@ -90,6 +91,8 @@ def audit_replicate_consistency(
         raise ValueError("candidate table is missing required audit columns")
     if windows["window_id"].duplicated().any() or candidates["candidate_region_id"].duplicated().any():
         raise ValueError("window and candidate identifiers must be unique")
+    if normalization not in {"raw_counts", "library_cpm"}:
+        raise ValueError("normalization must be 'raw_counts' or 'library_cpm'")
     quality = windows["quality_pass"].astype(str).str.lower().eq("true")
     selected = windows.loc[quality].copy()
     if selected.empty or candidates.empty:
@@ -110,11 +113,18 @@ def audit_replicate_consistency(
         bin_size = int(coolers[0].binsize)
         if any(int(cool.binsize) != bin_size or not cool.chromsizes.equals(coolers[0].chromsizes) for cool in coolers):
             raise ValueError("replicate resolutions and chromosome lengths must agree")
+        library_sums = [float(cool.info["sum"]) for cool in coolers]
+        if any(not np.isfinite(total) or total <= 0 for total in library_sums):
+            raise ValueError("replicate libraries must have positive finite total contact counts")
         for window in selected.itertuples(index=False):
             if window.start % bin_size or window.end % bin_size or window.end <= window.start:
                 raise ValueError("windows must be positive and bin aligned")
             region = f"{window.chrom}:{int(window.start)}-{int(window.end)}"
-            matrices = [np.asarray(cool.matrix(balance=False).fetch(region)) for cool in coolers]
+            matrices = [
+                np.asarray(cool.matrix(balance=False).fetch(region), dtype=float)
+                * (1_000_000 / library_sums[index] if normalization == "library_cpm" else 1.0)
+                for index, cool in enumerate(coolers)
+            ]
             expected_size = (int(window.end) - int(window.start)) // bin_size
             if any(matrix.shape != (expected_size, expected_size) for matrix in matrices):
                 raise ValueError("matrix shape does not match requested coordinates")
@@ -155,6 +165,8 @@ def audit_replicate_consistency(
             }
     summary = {
         "protocol": "task2-main-v1 descriptive within-window distance centering",
+        "normalization": normalization,
+        "library_total_contact_counts": library_sums,
         "bin_size_bp": bin_size, "minimum_offset_bins": minimum_offset,
         "minimum_distance_bp": minimum_offset * bin_size,
         "num_windows": len(table), "num_candidate_regions": len(registry), "groups": groups,

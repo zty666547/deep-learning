@@ -46,7 +46,7 @@
 
 ### 5.3 任务三
 
-引用 [`docs/task3-visualization-results.md`](task3-visualization-results.md)：全基因组rep1/rep2接触轨道、重复差异、已知结构和候选轨道。说明没有可靠基因注释，因此没有伪造基因轨道。
+引用 [`docs/task3-visualization-results.md`](task3-visualization-results.md)：全基因组分段展示三条件曲线/均值、平均接触强度、RefSeq基因和已知CHIN/OPCID轨道。明确CPM只校正全库计数，不是RNA表达或显著性检验。
 
 ### 5.4 任务五
 

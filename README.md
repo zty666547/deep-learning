@@ -188,6 +188,8 @@ python scripts/train_baseline.py \
 
 输出包括 `model.pt`、`metrics.json`、`history.csv`、训练曲线和测试集混淆矩阵。首轮结果和多数类对照见 [`docs/task1-baseline-results.md`](docs/task1-baseline-results.md)。当前结果只代表单随机种子基线，不作为稳定准确率或生物学结论。
 
+解释性现已补充全部41个测试结构的三Focal种子与随机参数对照；随机网络仍保留较高归因相关，所以显著性图不能直接证明已学到结构机制。运行方式、错误案例和全部数值见[解释性可信度核验](docs/task1-saliency-audit.md)。
+
 生成测试集中每类一个预测正确样本的输入梯度显著性图：
 
 ```bash

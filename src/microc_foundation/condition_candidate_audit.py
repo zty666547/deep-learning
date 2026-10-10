@@ -16,6 +16,7 @@ from .replicate_audit import distance_controlled_correlations
 def audit_candidate_condition_transfer(
     conditions: dict[str, list[str]], candidates: pd.DataFrame, output_dir: str, *,
     reference_condition: str = "WT", minimum_offset: int = 5,
+    normalization: str = "raw_counts",
 ) -> dict:
     """Compare fixed candidates within and between conditions, without reselection.
 
@@ -38,6 +39,8 @@ def audit_candidate_condition_transfer(
         raise ValueError("a replicate file cannot count as multiple conditions")
     if minimum_offset < 1:
         raise ValueError("minimum_offset must be positive")
+    if normalization not in {"raw_counts", "library_cpm"}:
+        raise ValueError("normalization must be 'raw_counts' or 'library_cpm'")
 
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
@@ -50,6 +53,13 @@ def audit_candidate_condition_transfer(
         first = next(iter(coolers.values()))[0]
         bin_size = int(first.binsize)
         chromsizes = first.chromsizes
+        library_sums = {
+            condition: [float(cool.info["sum"]) for cool in group]
+            for condition, group in coolers.items()
+        }
+        if any(not np.isfinite(total) or total <= 0
+               for group in library_sums.values() for total in group):
+            raise ValueError("all libraries must have positive finite total contact counts")
         for group in coolers.values():
             for cool in group:
                 if (int(cool.binsize) != bin_size or not cool.chromsizes.equals(chromsizes)
@@ -67,7 +77,12 @@ def audit_candidate_condition_transfer(
                 raise ValueError("candidate interval is too short for the selected distance offset")
             region = f"{candidate.chrom}:{start}-{end}"
             matrices = {
-                condition: [np.asarray(cool.matrix(balance=False).fetch(region)) for cool in group]
+                condition: [
+                    np.asarray(cool.matrix(balance=False).fetch(region), dtype=float)
+                    * (1_000_000 / library_sums[condition][index]
+                       if normalization == "library_cpm" else 1.0)
+                    for index, cool in enumerate(group)
+                ]
                 for condition, group in coolers.items()
             }
             if any(matrix.shape != (expected_size, expected_size)
@@ -113,6 +128,8 @@ def audit_candidate_condition_transfer(
     summary_table.to_csv(output / "candidate_condition_summary.csv", index=False)
     summary = {
         "protocol": "fixed task2-main-v1 candidate coordinates; within-condition replicate and all reference cross-replicate pairs",
+        "normalization": normalization,
+        "library_total_contact_counts": library_sums,
         "reference_condition": reference_condition,
         "conditions": list(conditions), "replicates_per_condition": 2,
         "bin_size_bp": bin_size, "minimum_offset_bins": minimum_offset,

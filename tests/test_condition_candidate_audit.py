@@ -35,6 +35,7 @@ def test_fixed_candidate_transfer_emits_within_and_all_cross_rep_pairs(tiny_cond
         paths, candidates, str(tmp_path / "outputs"), minimum_offset=2,
     )
     assert summary["num_candidate_regions"] == 1
+    assert summary["normalization"] == "raw_counts"
     pairwise = pd.read_csv(tmp_path / "outputs/candidate_condition_pairwise.csv")
     assert len(pairwise) == 6
     assert set(pairwise.condition_contrast) == {"within:WT", "within:mutant", "WT_vs_mutant"}
@@ -57,3 +58,24 @@ def test_reused_file_cannot_count_as_multiple_replicates(tiny_conditions, tmp_pa
     paths["mutant"][1] = paths["WT"][0]
     with pytest.raises(ValueError, match="multiple conditions"):
         audit_candidate_condition_transfer(paths, candidates, str(tmp_path / "outputs"), minimum_offset=2)
+
+
+def test_library_cpm_mode_is_recorded(tiny_conditions, tmp_path):
+    paths, candidates = tiny_conditions
+    summary = audit_candidate_condition_transfer(
+        paths, candidates, str(tmp_path / "outputs"), minimum_offset=2,
+        normalization="library_cpm",
+    )
+    assert summary["normalization"] == "library_cpm"
+    assert set(summary["library_total_contact_counts"]) == {"WT", "mutant"}
+    assert all(total > 0 for group in summary["library_total_contact_counts"].values()
+               for total in group)
+
+
+def test_unsupported_normalization_is_rejected(tiny_conditions, tmp_path):
+    paths, candidates = tiny_conditions
+    with pytest.raises(ValueError, match="normalization"):
+        audit_candidate_condition_transfer(
+            paths, candidates, str(tmp_path / "outputs"), minimum_offset=2,
+            normalization="balanced",
+        )

@@ -417,6 +417,18 @@ python scripts/audit_candidate_replication.py \
 
 稳定身份格式为`task2-main-v1:染色体:起点-终点`，跨版本引用必须同时给坐标，不能只写`candidate_004`。核验协议和结果见[重复一致性专项核验](docs/task2-replication-audit.md)。
 
+已知覆盖与背景对照（独立核验，不重新筛候选）：
+
+```bash
+python scripts/benchmark_discovery.py \
+  --windows outputs/task2_window_scan/candidate_windows.csv \
+  --structures data/processed/structures.csv \
+  --output-dir outputs/task2_feature_benchmark \
+  --window-bp 20480 --purge-bp 20480 --folds 5 --permutations 100 --seed 2026
+```
+
+187不重叠窗口（141已知重叠、46无标注背景），五段留出并保留20,480 bp训练缓冲。原8项特征平均AUC 0.5582落在打乱标签范围，目前不足以确认稳定区分能力。全滑窗覆盖100%标注只表示扫描覆盖，不是模型召回。见[特征核验](docs/task2-feature-benchmark.md)。
+
 ## 当前核验与交付顺序
 
 1. 先完成[质量清单](docs/quality-review.md)中的流程统一、关键对照与课程要求覆盖，再冻结结果；

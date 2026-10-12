@@ -4,7 +4,7 @@
 
 先看[质量核验与剩余任务](docs/quality-review.md)，详细理解流程可看[项目讲解手册](docs/project-walkthrough.md)。下面“本轮范围”保留为第一轮底座说明，后续任务的命令见对应章节。
 
-完整Markdown实验报告初稿见[实验报告 v1](docs/experimental-report.md)：含设计思路、任务一/二/三/五真实结果、12张配图、失败对照、复现入口与结论边界。组员信息/贡献度及最终复现和交付验收尚待完成，不能直接作为已验收定稿。
+完整Markdown实验报告初稿见[实验报告 v1.1](docs/experimental-report.md)：含设计思路、任务一/二/三/五真实结果、12张配图、失败对照、复现入口与结论边界，并补入任务二主流程隔离复现。组员信息/贡献度及最终复现和交付验收尚待完成，不能直接作为已验收定稿。
 
 2026-10-10已按课程要求下载并校验WT 37°C、ΔstpA、ΔhnsΔstpA各双重复，生成覆盖全染色体的任务三4面板分段图。来源、方法和边界见[任务三结果说明](docs/task3-visualization-results.md)与[原要求核验](docs/course-requirements-audit.md)。
 
@@ -59,6 +59,8 @@ ruff check .
 非editable安装、新环境版本快照与从原始数据重建全部窗口的核验见[底座隔离复现](docs/foundation-reproduction.md)。该核验不重训模型，也不等于全项目复现验收。
 
 现有三个Focal模型已在隔离环境、重建张量上核验123条预测与旧分类指标完全一致；命令与旧权重种子字段限制见[任务一推理复现](docs/task1-inference-reproduction.md)，这不是训练复现或新测试性能。
+
+任务二主候选流程也已在隔离环境从原始Excel/两WT重新池化、扫描、聚类和合并：全部bin/pixel精确一致，1,807窗口、1,498成员、25初选和5区域全表最大浮点差0。协议与凭据见[任务二隔离复现](docs/task2-reproduction.md)。这不包含全部核验支路重跑，也不提高AUC或确认新结构；当前全仓161项测试通过。
 
 将真实数据放入 `data/raw/`。该目录中的数据默认不会提交到 Git，以免误上传大文件或受限数据。
 

@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-12",
+  "protocol": "task2-main-v1-isolated-reproduction-v1",
+  "scope": "annotations_coarsening_scan_clustering_candidates",
+  "status": "passed",
+  "full_course_reproduction": false,
+  "biological_validation": false,
+  "protocol_commit": "ebbbfef",
+  "installed_business_source_commit": "bc384fa551e57cba96457afbcd6a641a936a02e7",
+  "wheel_sha256": "acdc7b13a7ce1ad85645fa2367b99a8444bd3946a6a4adccfc40ee111dca08bd",
+  "runner_sha256": "9a0d87f39f2c702867fe2478e3c4827358c1081931a1812a834d11467c780410",
+  "python": "3.9.6",
+  "platform": "macOS-26.5.1-arm64-arm-64bit",
+  "isolated": true,
+  "editable": false,
+  "elapsed_seconds": 168.279421792,
+  "coarsened_rep1": {
+    "bin_size": 160,
+    "bins": 29011,
+    "pixels_checked": 141955644,
+    "count_sum": 368695972,
+    "bin_coordinates_and_all_pixels_exact": true,
+    "count_conservation": true
+  },
+  "coarsened_rep2": {
+    "bin_size": 160,
+    "bins": 29011,
+    "pixels_checked": 137745984,
+    "count_sum": 358452621,
+    "bin_coordinates_and_all_pixels_exact": true,
+    "count_conservation": true
+  },
+  "tables": {
+    "scan": {"rows": 1807, "columns": 72, "max_float_absolute_error": 0.0},
+    "members": {"rows": 1498, "columns": 83, "max_float_absolute_error": 0.0},
+    "initial_candidates": {"rows": 25, "columns": 83, "max_float_absolute_error": 0.0},
+    "merged_candidates": {"rows": 5, "columns": 12, "max_float_absolute_error": 0.0}
+  },
+  "all_table_identities_discrete_values_and_order_exact": true,
+  "float_comparison": {"rtol": 1e-12, "atol": 1e-12},
+  "scan_summary_max_float_error": 0.0,
+  "clustering_summary_max_float_error": 0.0,
+  "scan_summary_only_normalization": "ordered new pooled file paths replaced with rep1/rep2",
+  "selected_clusters": 2,
+  "stable_candidate_keys": [
+    "task2-main-v1:NC_000913.3:1251840-1280000",
+    "task2-main-v1:NC_000913.3:1891840-1914880",
+    "task2-main-v1:NC_000913.3:1978880-2004480",
+    "task2-main-v1:NC_000913.3:3458560-3486720",
+    "task2-main-v1:NC_000913.3:4172800-4195840"
+  ],
+  "output_sha256": {
+    "scan/candidate_windows.csv": "e8ad603fb1cb9e1bcb8d21a8a9246b1c2f75873f442a620b78fcaa66d4d0ba5d",
+    "clustering/window_clusters.csv": "bdb6ff6122eaa95416e348c2eea02f3f731ee3b0a35442eb331bdcce4699dd15",
+    "clustering/candidate_regions.csv": "ddbd46be8121adecf2a2e5c79cde76547cc68e134c79e16a6422d23795e83fa9"
+  },
+  "installed_wheel_tests": {"tests": 161, "failures": 0, "errors": 0, "skipped": 0},
+  "limitations": [
+    "Same machine, same frozen inputs and method; not an independent biological experiment",
+    "Does not rerun all replication, mutant, resolution, shape or feature-benchmark audits",
+    "Does not improve the original feature AUC 0.5582 or confirm novel structures",
+    "COOL file bytes differ because of container metadata; all bin/pixel data match exactly",
+    "No cross-platform reproducibility guarantee; floating tolerances were frozen before execution"
+  ]
+}

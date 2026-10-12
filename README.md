@@ -4,6 +4,8 @@
 
 先看[质量核验与剩余任务](docs/quality-review.md)，详细理解流程可看[项目讲解手册](docs/project-walkthrough.md)。下面“本轮范围”保留为第一轮底座说明，后续任务的命令见对应章节。
 
+完整Markdown实验报告初稿见[实验报告 v1](docs/experimental-report.md)：含设计思路、任务一/二/三/五真实结果、12张配图、失败对照、复现入口与结论边界。组员信息/贡献度及最终复现和交付验收尚待完成，不能直接作为已验收定稿。
+
 2026-10-10已按课程要求下载并校验WT 37°C、ΔstpA、ΔhnsΔstpA各双重复，生成覆盖全染色体的任务三4面板分段图。来源、方法和边界见[任务三结果说明](docs/task3-visualization-results.md)与[原要求核验](docs/course-requirements-audit.md)。
 
 ## 本轮范围
@@ -462,7 +464,7 @@ python scripts/benchmark_discovery.py \
 ## 当前核验与交付顺序
 
 1. 先完成[质量清单](docs/quality-review.md)中的流程统一、关键对照与课程要求覆盖，再冻结结果；
-2. 把已核验结果按 [`docs/report-outline.md`](docs/report-outline.md) 汇总为实验报告；
+2. 审阅[完整报告初稿](docs/experimental-report.md)，填写组员与贡献度，并随最终核验更新定稿；原[提纲](docs/report-outline.md)保留作写作索引；
 3. 按 [`docs/video-script.md`](docs/video-script.md) 制作PPT并完成逐步讲解与计时试录；
 4. 运行 `python scripts/check_submission.py`检查证据文件；任务三检查当前三条件6重复、29,011个bin及465张PNG，不采用旧WT扫描摘要。通过不等于全部图层/版式、原始数据重算或最终交付验收，之后仍需干净环境完整复现；
 5. 根据组号、姓名和学号命名代码ZIP、报告和视频，分别上传并重新下载核验，目标在2026年10月18日白天完成。

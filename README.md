@@ -460,7 +460,7 @@ python scripts/benchmark_discovery.py \
 1. 先完成[质量清单](docs/quality-review.md)中的流程统一、关键对照与课程要求覆盖，再冻结结果；
 2. 把已核验结果按 [`docs/report-outline.md`](docs/report-outline.md) 汇总为实验报告；
 3. 按 [`docs/video-script.md`](docs/video-script.md) 制作PPT并完成逐步讲解与计时试录；
-4. 运行 `python scripts/check_submission.py`检查证据文件（不等于所有任务或最终交付验收），再做干净环境完整复现；
+4. 运行 `python scripts/check_submission.py`检查证据文件；任务三检查当前三条件6重复、29,011个bin及465张PNG，不采用旧WT扫描摘要。通过不等于全部图层/版式、原始数据重算或最终交付验收，之后仍需干净环境完整复现；
 5. 根据组号、姓名和学号命名代码ZIP、报告和视频，分别上传并重新下载核验，目标在2026年10月18日白天完成。
 
 ## 开发记录

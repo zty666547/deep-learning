@@ -1,0 +1,4 @@
+# Build tools used in the isolated macOS / CPython 3.9.6 reproduction.
+pip==26.0.1
+setuptools==80.9.0
+wheel==0.45.1

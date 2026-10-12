@@ -54,6 +54,8 @@ ruff check .
 
 ## 数据放置与坐标约定
 
+非editable安装、新环境版本快照与从原始数据重建全部窗口的核验见[底座隔离复现](docs/foundation-reproduction.md)。该核验不重训模型，也不等于全项目复现验收。
+
 将真实数据放入 `data/raw/`。该目录中的数据默认不会提交到 Git，以免误上传大文件或受限数据。
 
 - COOL 输入必须是单分辨率 `.cool` 或 `.cool.gz`；

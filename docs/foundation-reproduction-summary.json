@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-12",
+  "protocol": "foundation-isolated-wheel-v1",
+  "scope": "foundation_only",
+  "full_course_reproduction": false,
+  "status": "passed",
+  "source_commit": "bc384fa551e57cba96457afbcd6a641a936a02e7",
+  "python": "3.9.6",
+  "platform": "macOS-26.5.1-arm64-arm-64bit",
+  "isolated": true,
+  "editable": false,
+  "system_site_packages": false,
+  "wheel_sha256": "acdc7b13a7ce1ad85645fa2367b99a8444bd3946a6a4adccfc40ee111dca08bd",
+  "runner_sha256": "43b389bdd3d3747817b8882c6169e648c6e04ef7ef532b015abb27274a46dfb1",
+  "annotation_counts": {"CHIN": 250, "OPCID": 68, "CHID": 26},
+  "split_counts": {"train": 248, "validation": 55, "test": 41},
+  "tensor_shape": [344, 2, 128, 128],
+  "fields_checked": 15,
+  "numerical_equality": "exact",
+  "max_matrix_absolute_error": 0.0,
+  "dataset_sha256": "8708039a77fa210c7aaf06459e9cb69ea934ad5d3b6ccf76b8fd44da935d461d",
+  "elapsed_seconds": 59.922861624999996,
+  "installed_wheel_tests": {"tests": 149, "failures": 0, "errors": 0, "skipped": 0},
+  "existing_evidence_check": "passed; not a raw-data rerun",
+  "heatmap_structure_id": "OPCID_1",
+  "limitations": [
+    "Uses the same machine and data as development, not an independent external experiment",
+    "Model retraining, Task 2 full pipeline and Task 3 rerendering are not included",
+    "Exact-version environment snapshot is not a hash lock or a cross-platform guarantee"
+  ]
+}

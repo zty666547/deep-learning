@@ -36,7 +36,11 @@
 
 ### 5.1 任务一
 
+先引用[三分类结果](task1-baseline-results.md)和多数类对照，保留课程要求对应的Accuracy、混淆矩阵、逐类及多种子结果；补充任务不能替代三分类。
+
 引用 [`docs/task1-multilabel-results.md`](task1-multilabel-results.md)：Macro F1 `0.6439 ± 0.0546`、Micro F1 `0.8037 ± 0.0118`，并同时报告CHID/CHIN/OPCID逐标签结果和多数标签基线。
+
+解释部分同时引用[全测试归因与随机参数核验](task1-saliency-audit.md)、[距离/能量匹配遮挡](task1-occlusion-audit.md)。遮挡支持局部敏感性排序，但变化方向依类别而异，不把热图富集或遮挡效应当结构机制证明。
 
 ### 5.2 任务二
 

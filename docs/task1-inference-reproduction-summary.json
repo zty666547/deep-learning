@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-12",
+  "protocol": "task1-installed-inference-v1",
+  "status": "passed",
+  "retrained": false,
+  "full_course_reproduction": false,
+  "isolated": true,
+  "editable": false,
+  "wheel_sha256": "acdc7b13a7ce1ad85645fa2367b99a8444bd3946a6a4adccfc40ee111dca08bd",
+  "runner_sha256": "e23a1bc803eb8532909c16e10cab579e23773e83fd80887ec1faae11a9e27e5f",
+  "reconstructed_dataset_sha256": "8708039a77fa210c7aaf06459e9cb69ea934ad5d3b6ccf76b8fd44da935d461d",
+  "seed_provenance": "metrics.json plus directory name; legacy weights have no seed field",
+  "training_scaler_exact": true,
+  "test_structures": 41,
+  "models": 3,
+  "exact_prediction_rows": 123,
+  "classification_statistics_exact": true,
+  "old_logits_and_loss_compared": false,
+  "runs": [
+    {"seed": 2026, "accuracy": 0.6585365853658537, "macro_f1": 0.5185185185185185,
+     "checkpoint_sha256": "cabe4ee0245d8eff6fdd44bbc6edbde1a46fc84c9146e3cd4b99e61377595b43"},
+    {"seed": 2027, "accuracy": 0.6097560975609756, "macro_f1": 0.4953194953194953,
+     "checkpoint_sha256": "bae1eb9c7ead3e5750b454655b460b71cf039a53dca815321132406833f0c209"},
+    {"seed": 2028, "accuracy": 0.6341463414634146, "macro_f1": 0.48581011351909176,
+     "checkpoint_sha256": "55bff6d0c7dc9cd74a5e12972e3fe85c0effd5653f8d43b4356d8d3fb3ca1de4"}
+  ],
+  "installed_wheel_tests": {"tests": 155, "failures": 0, "errors": 0, "skipped": 0}
+}

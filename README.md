@@ -56,6 +56,8 @@ ruff check .
 
 非editable安装、新环境版本快照与从原始数据重建全部窗口的核验见[底座隔离复现](docs/foundation-reproduction.md)。该核验不重训模型，也不等于全项目复现验收。
 
+现有三个Focal模型已在隔离环境、重建张量上核验123条预测与旧分类指标完全一致；命令与旧权重种子字段限制见[任务一推理复现](docs/task1-inference-reproduction.md)，这不是训练复现或新测试性能。
+
 将真实数据放入 `data/raw/`。该目录中的数据默认不会提交到 Git，以免误上传大文件或受限数据。
 
 - COOL 输入必须是单分辨率 `.cool` 或 `.cool.gz`；

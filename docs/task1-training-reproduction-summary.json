@@ -1,0 +1,219 @@
+{
+  "date": "2026-10-12",
+  "protocol": "task1-raw-focal-training-reproduction-v1",
+  "scope": "raw_windows_and_three_default_focal_trainings",
+  "status": "passed",
+  "retrained": true,
+  "full_course_reproduction": false,
+  "biological_validation": false,
+  "protocol_commit": "075a7a8",
+  "source_commit": "bc384fa551e57cba96457afbcd6a641a936a02e7",
+  "python": "3.9.6",
+  "platform": "macOS-26.5.1-arm64-arm-64bit",
+  "isolated": true,
+  "editable": false,
+  "wheel_sha256": "acdc7b13a7ce1ad85645fa2367b99a8444bd3946a6a4adccfc40ee111dca08bd",
+  "torch_version": "2.8.0",
+  "torch_execution": {
+    "threads": 1,
+    "interop_threads": 10,
+    "deterministic_algorithms": false
+  },
+  "historical_cpu_threads_recorded": false,
+  "settings_provenance": "documented method plus original CLI defaults; historical optimizer CLI not saved",
+  "settings": {
+    "epochs": 40,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "patience": 8,
+    "device_name": "cpu",
+    "imbalance_strategy": "focal",
+    "focal_gamma": 2
+  },
+  "seeds": [
+    2026,
+    2027,
+    2028
+  ],
+  "dataset_comparison": {
+    "fields_checked": [
+      "annotation_end",
+      "annotation_start",
+      "center",
+      "chrom",
+      "labels",
+      "matrices",
+      "normalization",
+      "pooled_bin_size",
+      "pooling",
+      "replicate",
+      "source_bin_size",
+      "split",
+      "structure_id",
+      "window_end",
+      "window_start"
+    ],
+    "tensor_shape": [
+      344,
+      2,
+      128,
+      128
+    ],
+    "numerical_equality": "exact",
+    "max_matrix_absolute_error": 0
+  },
+  "runs": [
+    {
+      "seed": 2026,
+      "checks": {
+        "metrics": {
+          "max_float_absolute_error": 0
+        },
+        "history": {
+          "rows": 31,
+          "columns": 5,
+          "identities_discrete_and_order_exact": true,
+          "max_float_absolute_error": 0,
+          "rtol": 1e-12,
+          "atol": 1e-12
+        },
+        "checkpoint": {
+          "state_tensors_checked": 23,
+          "all_state_tensors_exact": true,
+          "max_tensor_absolute_error": 0,
+          "differing_tensors": {},
+          "metadata_max_float_error": 0,
+          "legacy_reference_missing_seed": true,
+          "seed_source": "metrics.json and directory"
+        }
+      },
+      "errors": {},
+      "matched": true,
+      "elapsed_seconds": 40.036011625,
+      "best_epoch": 23,
+      "epochs_ran": 31,
+      "accuracy": 0.6585365853658537,
+      "macro_f1": 0.5185185185185185
+    },
+    {
+      "seed": 2027,
+      "checks": {
+        "metrics": {
+          "max_float_absolute_error": 0
+        },
+        "history": {
+          "rows": 24,
+          "columns": 5,
+          "identities_discrete_and_order_exact": true,
+          "max_float_absolute_error": 0,
+          "rtol": 1e-12,
+          "atol": 1e-12
+        },
+        "checkpoint": {
+          "state_tensors_checked": 23,
+          "all_state_tensors_exact": true,
+          "max_tensor_absolute_error": 0,
+          "differing_tensors": {},
+          "metadata_max_float_error": 0,
+          "legacy_reference_missing_seed": true,
+          "seed_source": "metrics.json and directory"
+        }
+      },
+      "errors": {},
+      "matched": true,
+      "elapsed_seconds": 29.932722041999995,
+      "best_epoch": 16,
+      "epochs_ran": 24,
+      "accuracy": 0.6097560975609756,
+      "macro_f1": 0.4953194953194953
+    },
+    {
+      "seed": 2028,
+      "checks": {
+        "metrics": {
+          "max_float_absolute_error": 0
+        },
+        "history": {
+          "rows": 38,
+          "columns": 5,
+          "identities_discrete_and_order_exact": true,
+          "max_float_absolute_error": 0,
+          "rtol": 1e-12,
+          "atol": 1e-12
+        },
+        "checkpoint": {
+          "state_tensors_checked": 23,
+          "all_state_tensors_exact": true,
+          "max_tensor_absolute_error": 0,
+          "differing_tensors": {},
+          "metadata_max_float_error": 0,
+          "legacy_reference_missing_seed": true,
+          "seed_source": "metrics.json and directory"
+        }
+      },
+      "errors": {},
+      "matched": true,
+      "elapsed_seconds": 47.158939125,
+      "best_epoch": 30,
+      "epochs_ran": 38,
+      "accuracy": 0.6341463414634146,
+      "macro_f1": 0.48581011351909176
+    }
+  ],
+  "elapsed_seconds": 150.918726709,
+  "script_sha256": {
+    "reproduce_task1_training.py": "a1b91bafef7797a0034b3a95e22c9e9bb5691ea7821fe9090cac5e935541d268",
+    "reproduce_task2.py": "9a0d87f39f2c702867fe2478e3c4827358c1081931a1812a834d11467c780410",
+    "reproduce_foundation.py": "43b389bdd3d3747817b8882c6169e648c6e04ef7ef532b015abb27274a46dfb1"
+  },
+  "input_sha256": {
+    "data/raw/标注数据.xlsx": "a1fa9c0d359509a9eb319442c19e300cb5da85546eeb567368a390d22205167a",
+    "data/raw/GSE272159_37C_rep1.mapq_30.10.cool": "0256e10da36abfe0238bf16952bc43bc78365f43c201e6e3ba0c49bd243549a8",
+    "data/raw/GSE272159_37C_rep2.mapq_30.10.cool": "ede9b4f7c0c6b40c8f098e43cdd0abbc0a8987f05e8b37051a5e3cbf143ad106",
+    "data/processed/task1_windows_full.npz": "8708039a77fa210c7aaf06459e9cb69ea934ad5d3b6ccf76b8fd44da935d461d",
+    "outputs/task1_imbalance_comparison/focal/seed_2026/model.pt": "cabe4ee0245d8eff6fdd44bbc6edbde1a46fc84c9146e3cd4b99e61377595b43",
+    "outputs/task1_imbalance_comparison/focal/seed_2026/history.csv": "8d3f49012225dae75b45d06db68d609760cb7775513501a8c7667e11d6b9c641",
+    "outputs/task1_imbalance_comparison/focal/seed_2026/metrics.json": "27a479c5583868a424ac0ea3b26380f08eab1538c445dfd607c80e0432bb31fc",
+    "outputs/task1_imbalance_comparison/focal/seed_2027/model.pt": "bae1eb9c7ead3e5750b454655b460b71cf039a53dca815321132406833f0c209",
+    "outputs/task1_imbalance_comparison/focal/seed_2027/history.csv": "452ff7e01ca3eda31b87bdb1816cecc0dc7214fa8a827620efb7bdca40a07df2",
+    "outputs/task1_imbalance_comparison/focal/seed_2027/metrics.json": "210714e185f538e8ae3aa47289cacf75796747aac3f5cebd3b3bab8d1c8ff884",
+    "outputs/task1_imbalance_comparison/focal/seed_2028/model.pt": "55bff6d0c7dc9cd74a5e12972e3fe85c0effd5653f8d43b4356d8d3fb3ca1de4",
+    "outputs/task1_imbalance_comparison/focal/seed_2028/history.csv": "afbf2cc81e2ddfcf05d3c364752d4d5b3d943d653a7600e01d3ea12da854f9a6",
+    "outputs/task1_imbalance_comparison/focal/seed_2028/metrics.json": "c301a103bfc0e96fcd5fed636a64df522d8bf6f9540dfd96a493201e1ad61296"
+  },
+  "output_sha256": {
+    "seed_2026/confusion_matrix.png": "e39462040a95dc24e3ccdb4e4c7541d5c7b43855009d6264da20e30b325b4cec",
+    "seed_2026/history.csv": "8d3f49012225dae75b45d06db68d609760cb7775513501a8c7667e11d6b9c641",
+    "seed_2026/metrics.json": "27a479c5583868a424ac0ea3b26380f08eab1538c445dfd607c80e0432bb31fc",
+    "seed_2026/model.pt": "840fb89928127504dcac45ea12fc1fcc0a2dcc8fa572245eb602396be559b817",
+    "seed_2026/training_curves.png": "58e9425e582c4ce683c683ed4f6f4cb20867b068ae84218a07ee5478bcb63b1f",
+    "seed_2027/confusion_matrix.png": "91209fd9fb0d2ce83c4ae72e9295564d6fc7a8e68e4424a42d608522c2ed7e8c",
+    "seed_2027/history.csv": "452ff7e01ca3eda31b87bdb1816cecc0dc7214fa8a827620efb7bdca40a07df2",
+    "seed_2027/metrics.json": "210714e185f538e8ae3aa47289cacf75796747aac3f5cebd3b3bab8d1c8ff884",
+    "seed_2027/model.pt": "21d9c9ed089921addcf4e76002be78d69daeae1a5e551762af6cd38849413bfe",
+    "seed_2027/training_curves.png": "17ec3c832285eff6c887825446f5c8a9d97c99a7ae4e46026bc8fda4fdbcb731",
+    "seed_2028/confusion_matrix.png": "4a9168109b3f3bfbdd8505ba0145ad6ffec7df5982c6a1f895fa4d6b586557e8",
+    "seed_2028/history.csv": "afbf2cc81e2ddfcf05d3c364752d4d5b3d943d653a7600e01d3ea12da854f9a6",
+    "seed_2028/metrics.json": "c301a103bfc0e96fcd5fed636a64df522d8bf6f9540dfd96a493201e1ad61296",
+    "seed_2028/model.pt": "4d496bf4505bdf2b8ff9ef092df87db3767648e10b8f2cd146965e6f3ddce333",
+    "seed_2028/training_curves.png": "c23bbd0b0f3d11b42c81a73ccf5625115f92cc5bac1982eead30a4ddad3559ce",
+    "structures.csv": "39be404246d93789414114a96a1a5df074fdbd5221c9ad9e9ae87fa6415de3fd",
+    "structures_split.csv": "a79ef8a269483c967c4c2242d1635214a0a048084f0521693cb079c77ab5dd88",
+    "windows.npz": "8708039a77fa210c7aaf06459e9cb69ea934ad5d3b6ccf76b8fd44da935d461d"
+  },
+  "installed_wheel_tests": {
+    "tests": 179,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "limitations": [
+    "Same machine, data, spatial split and existing test structures; not independent validation",
+    "Only three default Focal main models; other classification comparisons, multilabel and explanation branches are not retrained",
+    "Historical full CLI and CPU thread settings were not saved; this run fixes one CPU thread without tuning",
+    "Legacy reference checkpoints lack seed; identity verified using metrics and directory, never modifying old weights",
+    "Exact tensor equality does not require torch archive byte equality",
+    "Super-resolution training and final course deliverables remain incomplete"
+  ]
+}

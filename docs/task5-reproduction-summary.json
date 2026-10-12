@@ -1,0 +1,694 @@
+{
+  "date": "2026-10-12",
+  "protocol": "task5-corrected-raw-training-reproduction-v1",
+  "scope": "raw_paired_windows_three_corrected_trainings_full_reconstructions_and_strata",
+  "status": "diverged",
+  "full_course_reproduction": false,
+  "biological_validation": false,
+  "retrained": true,
+  "protocol_commit": "52d2db5",
+  "checker_correction_and_audit_commit": "3fe80c8",
+  "source_commit": "bc384fa551e57cba96457afbcd6a641a936a02e7",
+  "python": "3.9.6",
+  "platform": "macOS-26.5.1-arm64-arm-64bit",
+  "isolated": true,
+  "editable": false,
+  "wheel_sha256": "acdc7b13a7ce1ad85645fa2367b99a8444bd3946a6a4adccfc40ee111dca08bd",
+  "torch_version": "2.8.0",
+  "torch_execution": {
+    "threads": 1,
+    "interop_threads": 10,
+    "deterministic_algorithms": false
+  },
+  "historical_cpu_threads_recorded": false,
+  "settings_provenance": "documented method and original CLI defaults; full historical CLI not in reference artifacts",
+  "settings": {
+    "epochs": 20,
+    "batch_size": 16,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "patience": 5,
+    "device_name": "cpu"
+  },
+  "split_guard_bp": {
+    "low": 30720,
+    "high": 20480
+  },
+  "aligned_counts": {
+    "train": 248,
+    "validation": 54,
+    "test": 41
+  },
+  "excluded_ids": [
+    "CHIN_179"
+  ],
+  "dataset_comparisons": {
+    "low": {
+      "fields_checked": [
+        "annotation_end",
+        "annotation_start",
+        "center",
+        "chrom",
+        "labels",
+        "matrices",
+        "normalization",
+        "pooled_bin_size",
+        "pooling",
+        "replicate",
+        "source_bin_size",
+        "split",
+        "structure_id",
+        "window_end",
+        "window_start"
+      ],
+      "array_shapes": {
+        "annotation_end": [
+          344
+        ],
+        "annotation_start": [
+          344
+        ],
+        "center": [
+          344
+        ],
+        "chrom": [
+          344
+        ],
+        "labels": [
+          344
+        ],
+        "matrices": [
+          344,
+          2,
+          128,
+          128
+        ],
+        "normalization": [],
+        "pooled_bin_size": [],
+        "pooling": [],
+        "replicate": [
+          2
+        ],
+        "source_bin_size": [],
+        "split": [
+          344
+        ],
+        "structure_id": [
+          344
+        ],
+        "window_end": [
+          344
+        ],
+        "window_start": [
+          344
+        ]
+      },
+      "dtype_shape_identity_and_values_exact": true,
+      "max_array_absolute_error": 0
+    },
+    "high": {
+      "fields_checked": [
+        "annotation_end",
+        "annotation_start",
+        "center",
+        "chrom",
+        "labels",
+        "matrices",
+        "normalization",
+        "pooled_bin_size",
+        "pooling",
+        "replicate",
+        "source_bin_size",
+        "split",
+        "structure_id",
+        "window_end",
+        "window_start"
+      ],
+      "array_shapes": {
+        "annotation_end": [
+          344
+        ],
+        "annotation_start": [
+          344
+        ],
+        "center": [
+          344
+        ],
+        "chrom": [
+          344
+        ],
+        "labels": [
+          344
+        ],
+        "matrices": [
+          344,
+          2,
+          256,
+          256
+        ],
+        "normalization": [],
+        "pooled_bin_size": [],
+        "pooling": [],
+        "replicate": [
+          2
+        ],
+        "source_bin_size": [],
+        "split": [
+          344
+        ],
+        "structure_id": [
+          344
+        ],
+        "window_end": [
+          344
+        ],
+        "window_start": [
+          344
+        ]
+      },
+      "dtype_shape_identity_and_values_exact": true,
+      "max_array_absolute_error": 0
+    }
+  },
+  "runs": [
+    {
+      "seed": 2026,
+      "checks": {
+        "metrics": {
+          "max_float_absolute_error": 1.1102230246251565e-16
+        },
+        "per_sample_metrics": {
+          "rows": 164,
+          "columns": 6,
+          "identities_discrete_and_order_exact": true,
+          "max_float_absolute_error": 2.220446049250313e-16,
+          "rtol": 1e-12,
+          "atol": 1e-12
+        },
+        "checkpoint": {
+          "state_tensors_checked": 6,
+          "all_state_tensors_exact": true,
+          "max_tensor_absolute_error": 0,
+          "differing_tensors": {},
+          "metadata_max_float_error": 0,
+          "legacy_reference_missing_seed": false,
+          "seed_source": "checkpoint and metrics.json"
+        },
+        "reconstruction": {
+          "fields_checked": [
+            "annotation_end",
+            "annotation_start",
+            "bicubic",
+            "chrom",
+            "cnn",
+            "label",
+            "replicate",
+            "structure_id",
+            "target",
+            "window_end",
+            "window_start"
+          ],
+          "array_shapes": {
+            "annotation_end": [
+              41
+            ],
+            "annotation_start": [
+              41
+            ],
+            "bicubic": [
+              41,
+              2,
+              256,
+              256
+            ],
+            "chrom": [
+              41
+            ],
+            "cnn": [
+              41,
+              2,
+              256,
+              256
+            ],
+            "label": [
+              41
+            ],
+            "replicate": [
+              2
+            ],
+            "structure_id": [
+              41
+            ],
+            "target": [
+              41,
+              2,
+              256,
+              256
+            ],
+            "window_end": [
+              41
+            ],
+            "window_start": [
+              41
+            ]
+          },
+          "dtype_shape_identity_and_values_exact": true,
+          "max_array_absolute_error": 0
+        }
+      },
+      "errors": {
+        "history": "table numerical values differ: train_loss"
+      },
+      "matched": false,
+      "elapsed_seconds": 116.27789216600002,
+      "best_epoch": 20,
+      "epochs_ran": 20,
+      "cnn": {
+        "psnr": 23.66339919360643,
+        "ssim": 0.5133823467948719,
+        "mse": 0.19298890233039856
+      }
+    },
+    {
+      "seed": 2027,
+      "checks": {
+        "metrics": {
+          "max_float_absolute_error": 0
+        },
+        "per_sample_metrics": {
+          "rows": 164,
+          "columns": 6,
+          "identities_discrete_and_order_exact": true,
+          "max_float_absolute_error": 2.220446049250313e-16,
+          "rtol": 1e-12,
+          "atol": 1e-12
+        },
+        "checkpoint": {
+          "state_tensors_checked": 6,
+          "all_state_tensors_exact": true,
+          "max_tensor_absolute_error": 0,
+          "differing_tensors": {},
+          "metadata_max_float_error": 0,
+          "legacy_reference_missing_seed": false,
+          "seed_source": "checkpoint and metrics.json"
+        },
+        "reconstruction": {
+          "fields_checked": [
+            "annotation_end",
+            "annotation_start",
+            "bicubic",
+            "chrom",
+            "cnn",
+            "label",
+            "replicate",
+            "structure_id",
+            "target",
+            "window_end",
+            "window_start"
+          ],
+          "array_shapes": {
+            "annotation_end": [
+              41
+            ],
+            "annotation_start": [
+              41
+            ],
+            "bicubic": [
+              41,
+              2,
+              256,
+              256
+            ],
+            "chrom": [
+              41
+            ],
+            "cnn": [
+              41,
+              2,
+              256,
+              256
+            ],
+            "label": [
+              41
+            ],
+            "replicate": [
+              2
+            ],
+            "structure_id": [
+              41
+            ],
+            "target": [
+              41,
+              2,
+              256,
+              256
+            ],
+            "window_end": [
+              41
+            ],
+            "window_start": [
+              41
+            ]
+          },
+          "dtype_shape_identity_and_values_exact": true,
+          "max_array_absolute_error": 0
+        }
+      },
+      "errors": {
+        "history": "table numerical values differ: train_loss"
+      },
+      "matched": false,
+      "elapsed_seconds": 115.15088275,
+      "best_epoch": 20,
+      "epochs_ran": 20,
+      "cnn": {
+        "psnr": 23.660856678657513,
+        "ssim": 0.5119306383248146,
+        "mse": 0.19309931993484497
+      }
+    },
+    {
+      "seed": 2028,
+      "checks": {
+        "metrics": {
+          "max_float_absolute_error": 0
+        },
+        "per_sample_metrics": {
+          "rows": 164,
+          "columns": 6,
+          "identities_discrete_and_order_exact": true,
+          "max_float_absolute_error": 2.220446049250313e-16,
+          "rtol": 1e-12,
+          "atol": 1e-12
+        },
+        "checkpoint": {
+          "state_tensors_checked": 6,
+          "all_state_tensors_exact": true,
+          "max_tensor_absolute_error": 0,
+          "differing_tensors": {},
+          "metadata_max_float_error": 0,
+          "legacy_reference_missing_seed": false,
+          "seed_source": "checkpoint and metrics.json"
+        },
+        "reconstruction": {
+          "fields_checked": [
+            "annotation_end",
+            "annotation_start",
+            "bicubic",
+            "chrom",
+            "cnn",
+            "label",
+            "replicate",
+            "structure_id",
+            "target",
+            "window_end",
+            "window_start"
+          ],
+          "array_shapes": {
+            "annotation_end": [
+              41
+            ],
+            "annotation_start": [
+              41
+            ],
+            "bicubic": [
+              41,
+              2,
+              256,
+              256
+            ],
+            "chrom": [
+              41
+            ],
+            "cnn": [
+              41,
+              2,
+              256,
+              256
+            ],
+            "label": [
+              41
+            ],
+            "replicate": [
+              2
+            ],
+            "structure_id": [
+              41
+            ],
+            "target": [
+              41,
+              2,
+              256,
+              256
+            ],
+            "window_end": [
+              41
+            ],
+            "window_start": [
+              41
+            ]
+          },
+          "dtype_shape_identity_and_values_exact": true,
+          "max_array_absolute_error": 0
+        }
+      },
+      "errors": {
+        "history": "table numerical values differ: train_loss"
+      },
+      "matched": false,
+      "elapsed_seconds": 114.48276237500005,
+      "best_epoch": 18,
+      "epochs_ran": 20,
+      "cnn": {
+        "psnr": 23.664433292179428,
+        "ssim": 0.5132496692291668,
+        "mse": 0.19294598698616028
+      }
+    }
+  ],
+  "elapsed_seconds": 416.705571041,
+  "strata_checks": {
+    "aggregate": {
+      "max_float_absolute_error": 1.1102230246251565e-16
+    },
+    "distance_metrics_by_sample.csv": {
+      "rows": 410,
+      "columns": 6,
+      "identities_discrete_and_order_exact": true,
+      "max_float_absolute_error": 0,
+      "rtol": 1e-12,
+      "atol": 1e-12
+    },
+    "known_structure_metrics_by_sample.csv": {
+      "rows": 82,
+      "columns": 5,
+      "identities_discrete_and_order_exact": true,
+      "max_float_absolute_error": 0,
+      "rtol": 1e-12,
+      "atol": 1e-12
+    },
+    "distance_metrics_summary.csv": {
+      "rows": 10,
+      "columns": 5,
+      "identities_discrete_and_order_exact": true,
+      "max_float_absolute_error": 0,
+      "rtol": 1e-12,
+      "atol": 1e-12
+    },
+    "known_structure_metrics_summary.csv": {
+      "rows": 6,
+      "columns": 5,
+      "identities_discrete_and_order_exact": true,
+      "max_float_absolute_error": 0,
+      "rtol": 1e-12,
+      "atol": 1e-12
+    }
+  },
+  "original_comparison_errors": {
+    "strata_summary": "JSON discrete value mismatch: root.known_structure_summary[0].label"
+  },
+  "original_receipt_sha256": "a238c13cd5ec627982617e58717f16e017adb57935c6c22b7af8c39046553982",
+  "execution_script_sha256": {
+    "reproduce_task5.py": "9a7f4fc4abc77179ddff77bec2dd9379f6596f0ba08023a46c63868dea8abcda",
+    "reproduce_task1_training.py": "a1b91bafef7797a0034b3a95e22c9e9bb5691ea7821fe9090cac5e935541d268",
+    "reproduce_task2.py": "9a0d87f39f2c702867fe2478e3c4827358c1081931a1812a834d11467c780410",
+    "reproduce_foundation.py": "43b389bdd3d3747817b8882c6169e648c6e04ef7ef532b015abb27274a46dfb1"
+  },
+  "readonly_audit": {
+    "scope": "readonly_best_checkpoint_validation_not_historical_retraining",
+    "observed_default_cpu_threads": 4,
+    "runs": [
+      {
+        "seed": 2026,
+        "best_epoch": 20,
+        "history": {
+          "rows": 20,
+          "columns": {
+            "epoch": {
+              "max_absolute_error": 0,
+              "outside_frozen_tolerance": 0
+            },
+            "train_loss": {
+              "max_absolute_error": 4.806826200964842e-9,
+              "outside_frozen_tolerance": 20
+            },
+            "validation_loss": {
+              "max_absolute_error": 1.3245476604417661e-8,
+              "outside_frozen_tolerance": 17
+            }
+          }
+        },
+        "reference_best_validation_loss": 0.1213147747847769,
+        "reproduced_best_validation_loss": 0.1213147769923563,
+        "readonly_validation_loss_by_threads": {
+          "1": 0.12131477699235634,
+          "4": 0.1213147747847769
+        },
+        "validation_predictions_exact_across_threads": true,
+        "one_thread_matches_new_best_loss": true,
+        "default_threads_matches_old_best_loss": true
+      },
+      {
+        "seed": 2027,
+        "best_epoch": 20,
+        "history": {
+          "rows": 20,
+          "columns": {
+            "epoch": {
+              "max_absolute_error": 0,
+              "outside_frozen_tolerance": 0
+            },
+            "train_loss": {
+              "max_absolute_error": 4.3261435961339245e-9,
+              "outside_frozen_tolerance": 19
+            },
+            "validation_loss": {
+              "max_absolute_error": 6.6227383022088304e-9,
+              "outside_frozen_tolerance": 19
+            }
+          }
+        },
+        "reference_best_validation_loss": 0.1214037394082104,
+        "reproduced_best_validation_loss": 0.1214037446512116,
+        "readonly_validation_loss_by_threads": {
+          "1": 0.12140374465121163,
+          "4": 0.12140373940821048
+        },
+        "validation_predictions_exact_across_threads": true,
+        "one_thread_matches_new_best_loss": true,
+        "default_threads_matches_old_best_loss": true
+      },
+      {
+        "seed": 2028,
+        "best_epoch": 18,
+        "history": {
+          "rows": 20,
+          "columns": {
+            "epoch": {
+              "max_absolute_error": 0,
+              "outside_frozen_tolerance": 0
+            },
+            "train_loss": {
+              "max_absolute_error": 3.845460894158492e-9,
+              "outside_frozen_tolerance": 20
+            },
+            "validation_loss": {
+              "max_absolute_error": 5.794895993616045e-9,
+              "outside_frozen_tolerance": 17
+            }
+          }
+        },
+        "reference_best_validation_loss": 0.1212753170618304,
+        "reproduced_best_validation_loss": 0.121275314854251,
+        "readonly_validation_loss_by_threads": {
+          "1": 0.12127531485425101,
+          "4": 0.12127531706183045
+        },
+        "validation_predictions_exact_across_threads": true,
+        "one_thread_matches_new_best_loss": true,
+        "default_threads_matches_old_best_loss": true
+      }
+    ],
+    "serialized_strata_summary_recheck": {
+      "max_float_absolute_error": 0
+    },
+    "script_sha256": {
+      "audit_task5_history.py": "25c8d62ac9e3f478314eef7e4d31c1fc9520b72e18f9d550dd862fa2107195d5",
+      "reproduce_task5.py": "50e035fb992061dfa88cc4a651df6f209eca54036f8368fe1a426c3ef3fef094"
+    },
+    "does_not_change_original_status": true
+  },
+  "input_sha256": {
+    "data/raw/标注数据.xlsx": "a1fa9c0d359509a9eb319442c19e300cb5da85546eeb567368a390d22205167a",
+    "data/raw/GSE272159_37C_rep1.mapq_30.10.cool": "0256e10da36abfe0238bf16952bc43bc78365f43c201e6e3ba0c49bd243549a8",
+    "data/raw/GSE272159_37C_rep2.mapq_30.10.cool": "ede9b4f7c0c6b40c8f098e43cdd0abbc0a8987f05e8b37051a5e3cbf143ad106",
+    "data/processed/task1_windows_20480bp_160bp.npz": "2367619bc69bebab5878c994b4fde3e56d01b322d4a357aa694840470ad21596",
+    "data/processed/task1_windows_80bp.npz": "8c77b29473632e834de4cec833d9cfb2ac32406a470cce0ec7cb44af13ccf3ce",
+    "outputs/task5_corrected/summary.json": "29b44b418024d6cd215bfe8811c4dba2e923e81c684210871b511d75207555d8",
+    "outputs/task5_structure_recovery/summary.json": "18c5efae8ce0d1edbfdd6a0c282e69deacc1e8a4560813977206480b3abae9a7",
+    "outputs/task5_structure_recovery/distance_metrics_by_sample.csv": "7918c3644b2a4c796d311347bd82e1d4b0a82518b9eb9f1b4f88e55dc65945ee",
+    "outputs/task5_structure_recovery/known_structure_metrics_by_sample.csv": "cc888f1503f95be2ec0ac5b207fe3acdfc7bdcf61ef5564604a2377a832467ae",
+    "outputs/task5_structure_recovery/distance_metrics_summary.csv": "4449b2b67cc75a3e8e3474af32df975b5096de651dfbd2a4ba7af5b0d26bb493",
+    "outputs/task5_structure_recovery/known_structure_metrics_summary.csv": "5348b11985ca64e4160319e047e9c7753ab854be7b1dd8dac3cba09e60fa1666",
+    "outputs/task5_corrected/seed_2026/model.pt": "6fb072a874b7a668ef8340527cb95de7115c817068fc8e64504fef878b19ff29",
+    "outputs/task5_corrected/seed_2026/history.csv": "f740b90639ebb5e79cca08871d087b757793dd6d9d11425cf1d9e0778098db82",
+    "outputs/task5_corrected/seed_2026/metrics.json": "b0cbe4ac2ff2a605c2e5dec829e0cec967fd8ae786a8ce7b34e9829ed103c0b8",
+    "outputs/task5_corrected/seed_2026/per_sample_metrics.csv": "25663f8f340ab95dcacc8205bab38c2955e86b070e7add17e35185bf8238a75a",
+    "outputs/task5_corrected/seed_2026/test_reconstruction.npz": "5068a93f7c67e49490b6eff967d0f5ea5604cb672416172a938838510215eb7b",
+    "outputs/task5_corrected/seed_2027/model.pt": "c2a862f1ecbc671558a0b305227777f3bdaa159c7446e578ca129aacb0db6dea",
+    "outputs/task5_corrected/seed_2027/history.csv": "b5bdce3ac88b11a301185b687680c02be9be8550e7e4de8488d54acf2d06e2b8",
+    "outputs/task5_corrected/seed_2027/metrics.json": "8883ec913415b9ad5e323d7162845d586a9340121889f890dfc4e67cdb401b37",
+    "outputs/task5_corrected/seed_2027/per_sample_metrics.csv": "7f1ace86148c8824ec0f7fc5120b172488c8f7398764975586ff4930b1176495",
+    "outputs/task5_corrected/seed_2027/test_reconstruction.npz": "1933b31248cbf20ee29274b4d1bc9454d4fb41fcc828998b29e32fb3cd7de0d7",
+    "outputs/task5_corrected/seed_2028/model.pt": "2fd2cb27b1a3eb2123f44b374d9132cdec9e07e6c395563ea6c2dd25d87bfe72",
+    "outputs/task5_corrected/seed_2028/history.csv": "da861631bff01b65533ab4999b161ef5b0e133bd933907b2ff0db15777b8656a",
+    "outputs/task5_corrected/seed_2028/metrics.json": "b63710686295d173d3b7b7001b974cd725195c5ecc88909be1856df9acc94cf3",
+    "outputs/task5_corrected/seed_2028/per_sample_metrics.csv": "d5ef252af853ae2cf8926bc1d28253c9c1fabfd5052e00d68ef18fcfa8074296",
+    "outputs/task5_corrected/seed_2028/test_reconstruction.npz": "a8794dbc3468426444a224e999d9672f32a4505af2ccbece12198f2c2d9aa9ad"
+  },
+  "output_sha256": {
+    "high_split.csv": "a79ef8a269483c967c4c2242d1635214a0a048084f0521693cb079c77ab5dd88",
+    "high_windows.npz": "8c77b29473632e834de4cec833d9cfb2ac32406a470cce0ec7cb44af13ccf3ce",
+    "low_split.csv": "659da21ee6c3ffe5f251581f82a804f16b4339b53f3fd208caa0b35b26a793f5",
+    "low_windows.npz": "2367619bc69bebab5878c994b4fde3e56d01b322d4a357aa694840470ad21596",
+    "seed_2026/example_comparison.png": "71dc57aa760d9ee5a2c8bf045694e285785101bc315f9e8eef8876fafe8816ba",
+    "seed_2026/history.csv": "8d292dd55cfea417e526c73da76a9c2bc95a1cbb1e3a98a0dfc7080c74089c59",
+    "seed_2026/metrics.json": "5ff140fe1a6ec5e01cbc5ff06d0052649de0eb5caedd54fd65a95ed33fea9f41",
+    "seed_2026/model.pt": "cb8ba1cf4b3ce68a38fabae6f8e274dbbf619139e5f129ecaf677ca7204fba91",
+    "seed_2026/per_sample_metrics.csv": "493a64320acca7f99cad227b987933212882358d08099093084f44e92ea472d4",
+    "seed_2026/test_reconstruction.npz": "5068a93f7c67e49490b6eff967d0f5ea5604cb672416172a938838510215eb7b",
+    "seed_2027/example_comparison.png": "67a498d5ae3ab8688183d04a01fe2d75d4789d03a5673fcd1a371c6290f2ed30",
+    "seed_2027/history.csv": "05b633b5af9cd8478228a6f95aae3dd69eef62b219bab8858269b94a6ce34205",
+    "seed_2027/metrics.json": "8883ec913415b9ad5e323d7162845d586a9340121889f890dfc4e67cdb401b37",
+    "seed_2027/model.pt": "ba705f88fd559249353a90c1eb679789eab8876d20c81f91abeaf983d820aec8",
+    "seed_2027/per_sample_metrics.csv": "a1af87bb88377425b2a5db0d0d5342f813692e4b670c2b590b38c801db66b599",
+    "seed_2027/test_reconstruction.npz": "1933b31248cbf20ee29274b4d1bc9454d4fb41fcc828998b29e32fb3cd7de0d7",
+    "seed_2028/example_comparison.png": "8607ba833c8ec1233c15d0cc667608081c7e584c76a0c61e345551476d41d4a5",
+    "seed_2028/history.csv": "9947fac1d680cb50a71e13fbdc0ef2dafb891ffc614425b03aac75d47fec168c",
+    "seed_2028/metrics.json": "b63710686295d173d3b7b7001b974cd725195c5ecc88909be1856df9acc94cf3",
+    "seed_2028/model.pt": "66ae3ab50c700cc918eefee674ea74bf5be8e802f0762f298bb93f4af11cd57a",
+    "seed_2028/per_sample_metrics.csv": "43fada96b247c83fe3628d7d922f440bd3fba615a37c2d32817771a1f2db3bd5",
+    "seed_2028/test_reconstruction.npz": "a8794dbc3468426444a224e999d9672f32a4505af2ccbece12198f2c2d9aa9ad",
+    "strata/distance_metrics_by_sample.csv": "7918c3644b2a4c796d311347bd82e1d4b0a82518b9eb9f1b4f88e55dc65945ee",
+    "strata/distance_metrics_summary.csv": "4449b2b67cc75a3e8e3474af32df975b5096de651dfbd2a4ba7af5b0d26bb493",
+    "strata/known_structure_metrics_by_sample.csv": "cc888f1503f95be2ec0ac5b207fe3acdfc7bdcf61ef5564604a2377a832467ae",
+    "strata/known_structure_metrics_summary.csv": "5348b11985ca64e4160319e047e9c7753ab854be7b1dd8dac3cba09e60fa1666",
+    "strata/summary.json": "2317cc9d72e9d49c891bd1aff17cf9477ba1afff62670bc5c22205be9008ff2d",
+    "strata/task5_structure_recovery.png": "58b1c86051322693e29f10f068b902857bb9af64f8dae04b4f377967dee4780f",
+    "structures.csv": "39be404246d93789414114a96a1a5df074fdbd5221c9ad9e9ae87fa6415de3fd",
+    "summary.json": "46de0b4557c925e5eef031285267e45ac228af06474a7c5b6ddabab5480717e6"
+  },
+  "installed_wheel_tests": {
+    "tests": 194,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "limitations": [
+    "Original strict receipt remains diverged; per-epoch loss history exceeds frozen 1e-12 tolerance",
+    "Serialized JSON was separately rechecked after fixing an in-memory NumPy string type false positive; no original data or receipt rewritten",
+    "Readonly 1/default-4 thread best-checkpoint validation explains the selected-epoch loss difference, not all historical training settings",
+    "Same machine, same paired WT observations and split; no independent low-depth measurements or biological validation",
+    "Only default three corrected SR models and original strata; other experiment branches and final report/PPT/video/ZIP acceptance remain incomplete"
+  ]
+}

@@ -1,0 +1,3 @@
+cluster,members,known_overlap_members,unannotated_members,known_overlap_fraction,selected_windows,final_region_support_windows,nearest_window_id,nearest_chrom,nearest_start,nearest_end,nearest_known_structure_types,pc1,pc2,pc3
+0,603,450,153,0.746268656716418,19,11,window_00168,NC_000913.3,427520,448000,CHIN;OPCID,-1.8938947879436283,0.008039777471266798,0.14413591107066945
+1,895,669,226,0.7474860335195531,6,3,window_00765,NC_000913.3,1955840,1976320,,1.2759983878547572,-0.005416743927568516,-0.09711056354817141

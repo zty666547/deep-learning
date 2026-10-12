@@ -51,6 +51,23 @@ def test_path_normalization_preserves_seed_identity_and_does_not_mutate():
     assert normalized["input_files"] == ["seed_2026/test_reconstruction.npz", "seed_2027/test_reconstruction.npz"]
 
 
+def test_json_comparison_uses_serialized_types_but_preserves_label_checks(tmp_path):
+    actual = {"input_files": ["/new/seed_2026/test_reconstruction.npz"],
+              "known_structure_summary": [{"label": np.str_("CHID"), "mean": 0.1}]}
+    reference = {"input_files": ["/old/seed_2026/test_reconstruction.npz"],
+                 "known_structure_summary": [{"label": "CHID", "mean": 0.1}]}
+    with pytest.raises(ValueError, match="discrete"):
+        _MODULE.HELPERS.compare_json(_MODULE.normalize_evaluation_paths(actual), _MODULE.normalize_evaluation_paths(reference))
+    left, right = tmp_path / "actual.json", tmp_path / "reference.json"
+    left.write_text(json.dumps(actual))
+    right.write_text(json.dumps(reference))
+    assert _MODULE.compare_evaluation_summaries(left, right)["max_float_absolute_error"] == 0
+    actual["known_structure_summary"][0]["label"] = "OPCID"
+    left.write_text(json.dumps(actual))
+    with pytest.raises(ValueError, match="discrete"):
+        _MODULE.compare_evaluation_summaries(left, right)
+
+
 def test_aggregation_requires_ordered_seeds_and_sample_sd():
     runs = [{"seed": s, "cnn": {"mse": v, "psnr": v, "ssim": v},
              "bicubic_baseline": {"mse": 1.0, "psnr": 1.0, "ssim": 1.0}} for s, v in zip([2026, 2027, 2028], [1.0, 2.0, 3.0])]

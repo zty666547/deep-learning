@@ -50,6 +50,14 @@ def normalize_evaluation_paths(summary: dict) -> dict:
     return result
 
 
+def compare_evaluation_summaries(actual_path: Path, reference_path: Path) -> dict:
+    # Compare serialized JSON, not pandas' in-memory NumPy string scalars.
+    actual = json.loads(actual_path.read_text(encoding="utf-8"))
+    reference = json.loads(reference_path.read_text(encoding="utf-8"))
+    return {"max_float_absolute_error": HELPERS.compare_json(
+        normalize_evaluation_paths(actual), normalize_evaluation_paths(reference))}
+
+
 def aggregate_runs(runs: list[dict]) -> dict:
     if [r["seed"] for r in runs] != list(SEEDS):
         raise ValueError("aggregate requires ordered frozen three seeds")
@@ -199,13 +207,12 @@ def main() -> int:
         aggregate = aggregate_runs(metrics_runs)
         (output / "summary.json").write_text(json.dumps(aggregate, indent=2), encoding="utf-8")
         strata_dir = output / "strata"
-        evaluation = evaluate_reconstructions([str(output / f"seed_{s}" / "test_reconstruction.npz") for s in SEEDS],
-                                             str(strata_dir), bin_size_bp=80, near_diagonal_exclusion_bp=160)
+        evaluate_reconstructions([str(output / f"seed_{s}" / "test_reconstruction.npz") for s in SEEDS],
+                                 str(strata_dir), bin_size_bp=80, near_diagonal_exclusion_bp=160)
         operations = {"aggregate": lambda: {"max_float_absolute_error": HELPERS.compare_json(
             aggregate, json.loads((reference_runs / "summary.json").read_text()))},
-                      "strata_summary": lambda: {"max_float_absolute_error": HELPERS.compare_json(
-                          normalize_evaluation_paths(evaluation), normalize_evaluation_paths(
-                              json.loads((reference_strata / "summary.json").read_text())))}}
+                      "strata_summary": lambda: compare_evaluation_summaries(
+                          strata_dir / "summary.json", reference_strata / "summary.json")}
         operations.update({name: (lambda n=name: HELPERS.compare_tables(strata_dir / n, reference_strata / n)) for name in STRATUM_FILES})
         for name, operation in operations.items():
             try:

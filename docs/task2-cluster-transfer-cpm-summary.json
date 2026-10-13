@@ -1,0 +1,123 @@
+{
+  "protocol": "task2-candidate-excluded-cluster-transfer-library-cpm-v1",
+  "seed": 2026,
+  "fit_source": "WT1",
+  "fit_windows": 182,
+  "nonoverlapping_grid_windows": 200,
+  "evaluated_windows": 203,
+  "guard_bp": 20480,
+  "features": [
+    "total_contacts",
+    "nonzero_fraction",
+    "near_far_ratio",
+    "decay_slope",
+    "center_enrichment",
+    "coefficient_of_variation",
+    "contact_entropy"
+  ],
+  "components": 3,
+  "clusters": 2,
+  "variance_ratios": [
+    0.707262936029712,
+    0.13699982710996836,
+    0.10032739836784069
+  ],
+  "agreements": {
+    "WT1:WT2": {
+      "n": 200,
+      "agreement": 0.98,
+      "balanced_reference_agreement": 0.9847328244274809,
+      "adjusted_rand_index": 0.920710629055877,
+      "reference_cluster_counts": {
+        "0": 69,
+        "1": 131
+      },
+      "query_cluster_counts": {
+        "0": 73,
+        "1": 127
+      },
+      "shift_count": 199,
+      "shift_ari_quantiles": [
+        -0.011344017144425816,
+        -0.0048714154347014905,
+        0.04690939824309311
+      ],
+      "shift_ari_max": 0.11972616747749178,
+      "shift_control_is_descriptive_not_p_value": true
+    },
+    "dstpa1:dstpa2": {
+      "n": 198,
+      "agreement": 0.9393939393939394,
+      "balanced_reference_agreement": 0.9180402930402931,
+      "adjusted_rand_index": 0.7456476468138276,
+      "reference_cluster_counts": {
+        "0": 42,
+        "1": 156
+      },
+      "query_cluster_counts": {
+        "0": 44,
+        "1": 154
+      },
+      "shift_count": 197,
+      "shift_ari_quantiles": [
+        -0.0757554722569302,
+        -0.007381183766023624,
+        0.15671710861215216
+      ],
+      "shift_ari_max": 0.20321162478596866,
+      "shift_control_is_descriptive_not_p_value": true
+    },
+    "double1:double2": {
+      "n": 198,
+      "agreement": 0.797979797979798,
+      "balanced_reference_agreement": 0.8561151079136691,
+      "adjusted_rand_index": 0.35241725250650685,
+      "reference_cluster_counts": {
+        "0": 59,
+        "1": 139
+      },
+      "query_cluster_counts": {
+        "0": 99,
+        "1": 99
+      },
+      "shift_count": 197,
+      "shift_ari_quantiles": [
+        -0.004163121113328015,
+        -0.0017039461228463958,
+        0.02534697877245142
+      ],
+      "shift_ari_max": 0.08190800355352867,
+      "shift_control_is_descriptive_not_p_value": true
+    }
+  },
+  "input_sha256": {
+    "windows": "bdb6ff6122eaa95416e348c2eea02f3f731ee3b0a35442eb331bdcce4699dd15",
+    "candidates": "ddbd46be8121adecf2a2e5c79cde76547cc68e134c79e16a6422d23795e83fa9",
+    "WT1": "a2f0dab8a87b56dabce9ee7151b8ef3d59b1d7559563ede2ec8989d3cb56d986",
+    "WT2": "5f75a3b3512355c0e778298ac0fdff4c3eacc2b833b91cef8eb5f6572c557a3e",
+    "dstpa1": "31f1ab46f08b6440f17c5d97ad1d4733e19283bb0bcd30dd0d8399b9148b21e3",
+    "dstpa2": "80dcca40d21af6082adc744d270dccc13192114d18658280fa164e037032117e",
+    "double1": "2d7fac9819d54636583b9577db790dc7966e6e593a81a68adad1c06ee6f77c3d",
+    "double2": "f8b90a755b8c892730ebaea2234c45a7446238e1c46e72ba6fb562fe9dae8864"
+  },
+  "limitations": [
+    "Separate seven-feature diagnostic partition, not original pooled eight-feature cluster labels",
+    "WT2 contributed to original candidate selection; not an independent novelty holdout",
+    "Mutants never fit the partition; their reproducibility cannot prove new biological classes",
+    "Candidate windows plus 20480bp guard excluded from fit; k=2/PC=3 fixed before evaluation",
+    "Nonoverlapping windows still spatially correlated; cyclic controls are descriptive, not p-values",
+    "Features include intensity and decay; stable assignment is not morphology or mechanism proof",
+    "Quality eligibility fixed independently per query; failed candidate QC is never hidden",
+    "Library scaling does not correct local coverage, distance bias or establish biological novelty"
+  ],
+  "feature_normalization": "count * 1e6 / full upper-triangle library sum",
+  "library_sums": {
+    "WT1": 368695972.0,
+    "WT2": 358452621.0,
+    "dstpa1": 108552379.0,
+    "dstpa2": 109486541.0,
+    "double1": 141567539.0,
+    "double2": 185894502.0
+  },
+  "sensitivity_origin": "precommitted extension after observing raw-count transfer weakness; not blind model selection"
+}

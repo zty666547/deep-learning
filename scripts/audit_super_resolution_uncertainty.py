@@ -133,7 +133,9 @@ def main() -> int:
                 ax.plot([i, i], ci, color="#1769aa", linewidth=3)
                 ax.plot(i, item["mean_delta"], "o", color="#1769aa")
         ax.axhline(0, linestyle="--", color="gray")
-        ax.set(xticks=range(3), xticklabels=["Overlap", "Overlap + guard", "Merged 100kb"], title=title)
+        labels = [f"{label}\ngroups={schemes[name][metric].get('group_count', 0)}"
+                  for label, name in zip(("Overlap", "Overlap + guard", "Merged 100kb"), schemes)]
+        ax.set(xticks=range(3), xticklabels=labels, title=title)
         ax.tick_params(axis="x", rotation=15)
     fig.savefig(out / "paired_uncertainty.png", dpi=180)
     plt.close(fig)

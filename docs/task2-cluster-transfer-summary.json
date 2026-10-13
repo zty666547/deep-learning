@@ -1,0 +1,112 @@
+{
+  "protocol": "task2-candidate-excluded-cluster-transfer-v1",
+  "seed": 2026,
+  "fit_source": "WT1",
+  "fit_windows": 182,
+  "nonoverlapping_grid_windows": 200,
+  "evaluated_windows": 203,
+  "guard_bp": 20480,
+  "features": [
+    "total_contacts",
+    "nonzero_fraction",
+    "near_far_ratio",
+    "decay_slope",
+    "center_enrichment",
+    "coefficient_of_variation",
+    "contact_entropy"
+  ],
+  "components": 3,
+  "clusters": 2,
+  "variance_ratios": [
+    0.6989545230621061,
+    0.14564437489855156,
+    0.10401367792969832
+  ],
+  "agreements": {
+    "WT1:WT2": {
+      "n": 200,
+      "agreement": 0.975,
+      "balanced_reference_agreement": 0.975427885096587,
+      "adjusted_rand_index": 0.9020080211756614,
+      "reference_cluster_counts": {
+        "0": 97,
+        "1": 103
+      },
+      "query_cluster_counts": {
+        "0": 100,
+        "1": 100
+      },
+      "shift_count": 199,
+      "shift_ari_quantiles": [
+        -0.0049454320662178615,
+        -0.00012121157025041896,
+        0.023999890909586794
+      ],
+      "shift_ari_max": 0.06822191212262169,
+      "shift_control_is_descriptive_not_p_value": true
+    },
+    "dstpa1:dstpa2": {
+      "n": 198,
+      "agreement": 0.9696969696969697,
+      "balanced_reference_agreement": 0.9450931677018632,
+      "adjusted_rand_index": 0.8245193378623458,
+      "reference_cluster_counts": {
+        "0": 23,
+        "1": 175
+      },
+      "query_cluster_counts": {
+        "0": 25,
+        "1": 173
+      },
+      "shift_count": 197,
+      "shift_ari_quantiles": [
+        -0.09675413836033911,
+        0.0019537340920914082,
+        0.11552871819785075
+      ],
+      "shift_ari_max": 0.15062485062538183,
+      "shift_control_is_descriptive_not_p_value": true
+    },
+    "double1:double2": {
+      "n": 198,
+      "agreement": 0.7070707070707071,
+      "balanced_reference_agreement": 0.8231707317073171,
+      "adjusted_rand_index": 0.16732587515658215,
+      "reference_cluster_counts": {
+        "0": 34,
+        "1": 164
+      },
+      "query_cluster_counts": {
+        "0": 92,
+        "1": 106
+      },
+      "shift_count": 197,
+      "shift_ari_quantiles": [
+        -0.004951529983435342,
+        -0.002490424195720807,
+        0.024581739469139084
+      ],
+      "shift_ari_max": 0.03196505683228269,
+      "shift_control_is_descriptive_not_p_value": true
+    }
+  },
+  "input_sha256": {
+    "windows": "bdb6ff6122eaa95416e348c2eea02f3f731ee3b0a35442eb331bdcce4699dd15",
+    "candidates": "ddbd46be8121adecf2a2e5c79cde76547cc68e134c79e16a6422d23795e83fa9",
+    "WT1": "a2f0dab8a87b56dabce9ee7151b8ef3d59b1d7559563ede2ec8989d3cb56d986",
+    "WT2": "5f75a3b3512355c0e778298ac0fdff4c3eacc2b833b91cef8eb5f6572c557a3e",
+    "dstpa1": "31f1ab46f08b6440f17c5d97ad1d4733e19283bb0bcd30dd0d8399b9148b21e3",
+    "dstpa2": "80dcca40d21af6082adc744d270dccc13192114d18658280fa164e037032117e",
+    "double1": "2d7fac9819d54636583b9577db790dc7966e6e593a81a68adad1c06ee6f77c3d",
+    "double2": "f8b90a755b8c892730ebaea2234c45a7446238e1c46e72ba6fb562fe9dae8864"
+  },
+  "limitations": [
+    "Separate seven-feature diagnostic partition, not original pooled eight-feature cluster labels",
+    "WT2 contributed to original candidate selection; not an independent novelty holdout",
+    "Mutants never fit the partition; their reproducibility cannot prove new biological classes",
+    "Candidate windows plus 20480bp guard excluded from fit; k=2/PC=3 fixed before evaluation",
+    "Nonoverlapping windows still spatially correlated; cyclic controls are descriptive, not p-values",
+    "Features include intensity and decay; stable assignment is not morphology or mechanism proof",
+    "Quality eligibility fixed independently per query; failed candidate QC is never hidden"
+  ]
+}

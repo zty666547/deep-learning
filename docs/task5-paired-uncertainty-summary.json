@@ -1,0 +1,340 @@
+{
+  "protocol": "task5-paired-genomic-uncertainty-v1",
+  "test_structures": 41,
+  "seed_count": 3,
+  "replicate_count": 2,
+  "schemes": {
+    "block1_guard0": {
+      "psnr": {
+        "structure_count": 41,
+        "group_count": 13,
+        "mean_delta": 0.3336939324660486,
+        "improved_fraction": 1.0,
+        "draws": 10000,
+        "seed": 2026,
+        "interval_95": [
+          0.32110148173811953,
+          0.3409486053224216
+        ],
+        "leave_one_group_out_mean_range": [
+          0.3282648542115836,
+          0.3375332278789005
+        ],
+        "status": "descriptive_fixed_test_group_bootstrap",
+        "group_sizes": [
+          1,
+          1,
+          4,
+          1,
+          2,
+          6,
+          1,
+          1,
+          1,
+          1,
+          2,
+          14,
+          6
+        ]
+      },
+      "ssim": {
+        "structure_count": 41,
+        "group_count": 13,
+        "mean_delta": 0.024578595812709814,
+        "improved_fraction": 1.0,
+        "draws": 10000,
+        "seed": 2026,
+        "interval_95": [
+          0.023089274485772974,
+          0.02717728568588297
+        ],
+        "leave_one_group_out_mean_range": [
+          0.023991398109803764,
+          0.025744141790297173
+        ],
+        "status": "descriptive_fixed_test_group_bootstrap",
+        "group_sizes": [
+          1,
+          1,
+          4,
+          1,
+          2,
+          6,
+          1,
+          1,
+          1,
+          1,
+          2,
+          14,
+          6
+        ]
+      },
+      "mse": {
+        "structure_count": 41,
+        "group_count": 13,
+        "mean_delta": 0.01542211523870142,
+        "improved_fraction": 1.0,
+        "draws": 10000,
+        "seed": 2026,
+        "interval_95": [
+          0.014307968084025994,
+          0.016171305119188358
+        ],
+        "leave_one_group_out_mean_range": [
+          0.015187866843882058,
+          0.015773875443708323
+        ],
+        "status": "descriptive_fixed_test_group_bootstrap",
+        "group_sizes": [
+          1,
+          1,
+          4,
+          1,
+          2,
+          6,
+          1,
+          1,
+          1,
+          1,
+          2,
+          14,
+          6
+        ]
+      },
+      "distance_residual_r": {
+        "structure_count": 41,
+        "group_count": 13,
+        "mean_delta": 0.009061550170614599,
+        "improved_fraction": 1.0,
+        "draws": 10000,
+        "seed": 2026,
+        "interval_95": [
+          0.007502844977350729,
+          0.010690457338595902
+        ],
+        "leave_one_group_out_mean_range": [
+          0.008484572903914517,
+          0.009571964139129856
+        ],
+        "status": "descriptive_fixed_test_group_bootstrap",
+        "group_sizes": [
+          1,
+          1,
+          4,
+          1,
+          2,
+          6,
+          1,
+          1,
+          1,
+          1,
+          2,
+          14,
+          6
+        ]
+      }
+    },
+    "block1_guard20480": {
+      "psnr": {
+        "structure_count": 41,
+        "group_count": 2,
+        "mean_delta": 0.3336939324660486,
+        "improved_fraction": 1.0,
+        "draws": 10000,
+        "seed": 2026,
+        "interval_95": [
+          0.3252687560385422,
+          0.33542852761288816
+        ],
+        "leave_one_group_out_mean_range": [
+          0.3252687560385422,
+          0.33542852761288816
+        ],
+        "status": "descriptive_fixed_test_group_bootstrap",
+        "group_sizes": [
+          7,
+          34
+        ]
+      },
+      "ssim": {
+        "structure_count": 41,
+        "group_count": 2,
+        "mean_delta": 0.024578595812709814,
+        "improved_fraction": 1.0,
+        "draws": 10000,
+        "seed": 2026,
+        "interval_95": [
+          0.02410965573810727,
+          0.02685630474649361
+        ],
+        "leave_one_group_out_mean_range": [
+          0.024109655738107267,
+          0.026856304746493604
+        ],
+        "status": "descriptive_fixed_test_group_bootstrap",
+        "group_sizes": [
+          7,
+          34
+        ]
+      },
+      "mse": {
+        "structure_count": 41,
+        "group_count": 2,
+        "mean_delta": 0.01542211523870142,
+        "improved_fraction": 1.0,
+        "draws": 10000,
+        "seed": 2026,
+        "interval_95": [
+          0.01537748995949239,
+          0.01563886659485955
+        ],
+        "leave_one_group_out_mean_range": [
+          0.015377489959492393,
+          0.015638866594859562
+        ],
+        "status": "descriptive_fixed_test_group_bootstrap",
+        "group_sizes": [
+          7,
+          34
+        ]
+      },
+      "distance_residual_r": {
+        "structure_count": 41,
+        "group_count": 2,
+        "mean_delta": 0.009061550170614599,
+        "improved_fraction": 1.0,
+        "draws": 10000,
+        "seed": 2026,
+        "interval_95": [
+          0.008988452905899398,
+          0.00941659402780272
+        ],
+        "leave_one_group_out_mean_range": [
+          0.008988452905899398,
+          0.00941659402780272
+        ],
+        "status": "descriptive_fixed_test_group_bootstrap",
+        "group_sizes": [
+          7,
+          34
+        ]
+      }
+    },
+    "block100000_guard0": {
+      "psnr": {
+        "structure_count": 41,
+        "group_count": 5,
+        "mean_delta": 0.3336939324660486,
+        "improved_fraction": 1.0,
+        "draws": 10000,
+        "seed": 2026,
+        "interval_95": [
+          0.3222319490278835,
+          0.33975930369412394
+        ],
+        "leave_one_group_out_mean_range": [
+          0.3251753731943124,
+          0.3368130987405642
+        ],
+        "status": "descriptive_fixed_test_group_bootstrap",
+        "group_sizes": [
+          6,
+          1,
+          8,
+          4,
+          22
+        ]
+      },
+      "ssim": {
+        "structure_count": 41,
+        "group_count": 5,
+        "mean_delta": 0.024578595812709814,
+        "improved_fraction": 1.0,
+        "draws": 10000,
+        "seed": 2026,
+        "interval_95": [
+          0.023443449403208524,
+          0.026753652123098975
+        ],
+        "leave_one_group_out_mean_range": [
+          0.02423013336410398,
+          0.026306930194219317
+        ],
+        "status": "descriptive_fixed_test_group_bootstrap",
+        "group_sizes": [
+          6,
+          1,
+          8,
+          4,
+          22
+        ]
+      },
+      "mse": {
+        "structure_count": 41,
+        "group_count": 5,
+        "mean_delta": 0.01542211523870142,
+        "improved_fraction": 1.0,
+        "draws": 10000,
+        "seed": 2026,
+        "interval_95": [
+          0.013692931061790831,
+          0.01607642233371734
+        ],
+        "leave_one_group_out_mean_range": [
+          0.014651627002055185,
+          0.015978902804129048
+        ],
+        "status": "descriptive_fixed_test_group_bootstrap",
+        "group_sizes": [
+          6,
+          1,
+          8,
+          4,
+          22
+        ]
+      },
+      "distance_residual_r": {
+        "structure_count": 41,
+        "group_count": 5,
+        "mean_delta": 0.009061550170614599,
+        "improved_fraction": 1.0,
+        "draws": 10000,
+        "seed": 2026,
+        "interval_95": [
+          0.006848879571940333,
+          0.00994735528566737
+        ],
+        "leave_one_group_out_mean_range": [
+          0.008243905225065228,
+          0.009779510731818833
+        ],
+        "status": "descriptive_fixed_test_group_bootstrap",
+        "group_sizes": [
+          6,
+          1,
+          8,
+          4,
+          22
+        ]
+      }
+    }
+  },
+  "residual_metric": "per-channel distance-centered Pearson r on log1p maps, exclude <800bp and outer diagonals <3 pixels",
+  "aggregation": "mean per-channel per-seed metric within structure ID; positive delta always favors CNN",
+  "input_sha256": {
+    "outputs/task5_corrected/seed_2026/test_reconstruction.npz": "5068a93f7c67e49490b6eff967d0f5ea5604cb672416172a938838510215eb7b",
+    "outputs/task5_corrected/seed_2026/per_sample_metrics.csv": "25663f8f340ab95dcacc8205bab38c2955e86b070e7add17e35185bf8238a75a",
+    "outputs/task5_corrected/seed_2027/test_reconstruction.npz": "1933b31248cbf20ee29274b4d1bc9454d4fb41fcc828998b29e32fb3cd7de0d7",
+    "outputs/task5_corrected/seed_2027/per_sample_metrics.csv": "7f1ace86148c8824ec0f7fc5120b172488c8f7398764975586ff4930b1176495",
+    "outputs/task5_corrected/seed_2028/test_reconstruction.npz": "a8794dbc3468426444a224e999d9672f32a4505af2ccbece12198f2c2d9aa9ad",
+    "outputs/task5_corrected/seed_2028/per_sample_metrics.csv": "d5ef252af853ae2cf8926bc1d28253c9c1fabfd5052e00d68ef18fcfa8074296"
+  },
+  "limitations": [
+    "Fixed spatial test split; group bootstrap is conditional and not independent biological validation",
+    "100kb blocks merge transitively when any interval crosses their boundary",
+    "Overlap-connected/20480bp-expanded components are prespecified grouping sensitivities, not tuned for favorable CI",
+    "Few genomic groups; percentile intervals can be unstable and long-range dependence remains",
+    "No p-value, no test-set tuning, no retraining, no replacement of strict-history diverged status",
+    "Low resolution is derived from target; residual r is image fidelity, not novel structure or 3D proof"
+  ]
+}

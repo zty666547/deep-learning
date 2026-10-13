@@ -21,6 +21,7 @@ from microc_foundation.cluster_transfer import (
     candidate_guard_mask,
     circular_shift_control,
     fit_partition,
+    library_cpm_matrix,
     nonoverlapping_grid,
     single_replicate_features,
 )
@@ -44,6 +45,7 @@ def main() -> int:
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--guard-bp", type=int, default=20_480)
     parser.add_argument("--seed", type=int, default=2026)
+    parser.add_argument("--feature-normalization", choices=("raw_counts", "library_cpm"), default="raw_counts")
     args = parser.parse_args()
     out = Path(args.output_dir)
     if out.exists():
@@ -64,12 +66,16 @@ def main() -> int:
         raise ValueError("candidate representatives must be unique and QC-passed")
     selected = pd.concat([grid, reps]).drop_duplicates("window_id").sort_values(
         ["chrom", "start", "window_id"], kind="stable").reset_index(drop=True)
-    features, valid = {}, {}
+    features, valid, library_sums = {}, {}, {}
     with ExitStack() as stack:
         coolers = {name: stack.enter_context(open_cooler(path)) for name, path in paths.items()}
         for name, cool in coolers.items():
             if cool.binsize != 160:
                 raise ValueError("protocol requires 160bp bins")
+            library_sum = float(cool.info["sum"])
+            if not np.isfinite(library_sum) or library_sum <= 0:
+                raise ValueError("invalid full upper-triangle library sum")
+            library_sums[name] = library_sum
             records, qc = [], []
             for row in selected.itertuples(index=False):
                 if row.start % 160 or row.end % 160 or row.end - row.start != 20_480:
@@ -78,7 +84,9 @@ def main() -> int:
                 if matrix.shape != (128, 128):
                     raise ValueError("truncated window")
                 f = extract_contact_features(matrix)
-                records.append(f)
+                records.append(f if args.feature_normalization == "raw_counts" else
+                               extract_contact_features(library_cpm_matrix(
+                                   np.where(np.isfinite(matrix), matrix, 0.), library_sum)))
                 qc.append(f["finite_fraction"] >= .99 and f["total_contacts"] >= 1
                           and f["nonzero_fraction"] >= .01 and f["zero_bin_fraction"] <= .03
                           and f["largest_zero_run_fraction"] <= .03)
@@ -123,6 +131,12 @@ def main() -> int:
                                "Nonoverlapping windows still spatially correlated; cyclic controls are descriptive, not p-values",
                                "Features include intensity and decay; stable assignment is not morphology or mechanism proof",
                                "Quality eligibility fixed independently per query; failed candidate QC is never hidden"]}
+    if args.feature_normalization == "library_cpm":
+        summary.update(protocol="task2-candidate-excluded-cluster-transfer-library-cpm-v1",
+                       feature_normalization="count * 1e6 / full upper-triangle library sum",
+                       library_sums=library_sums,
+                       sensitivity_origin="precommitted extension after observing raw-count transfer weakness; not blind model selection")
+        summary["limitations"].append("Library scaling does not correct local coverage, distance bias or establish biological novelty")
     out.mkdir(parents=True)
     table.to_csv(out / "assignments.csv", index=False)
     candidates_out.to_csv(out / "candidate_assignments.csv", index=False)
@@ -136,6 +150,8 @@ def main() -> int:
         ax.plot(index, result["adjusted_rand_index"], "o", color="#1769aa")
     ax.set(xticks=range(3), xticklabels=list(agreements), ylabel="Adjusted Rand index",
            title="Frozen WT1 diagnostic partition; gray = cyclic-shift 95% range", ylim=(-.1, 1.05))
+    if args.feature_normalization == "library_cpm":
+        ax.set_title("Frozen WT1 partition (library CPM)\nGray = cyclic-shift ARI 95% range")
     fig.savefig(out / "cluster_transfer.png", dpi=180)
     plt.close(fig)
     print(json.dumps({"fit_windows": int(train_mask.sum()), "agreements": agreements}, indent=2))

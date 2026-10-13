@@ -13,6 +13,19 @@ SINGLE_FEATURES = (
 )
 
 
+def library_cpm_matrix(matrix: np.ndarray, library_sum: float) -> np.ndarray:
+    """Scale a query's counts by its observed full upper-triangle library sum.
+
+    This is not balancing, local coverage correction or distance normalization.
+    QC must still be calculated on original counts, never on transformed maps.
+    """
+    values = np.asarray(matrix, dtype=float)
+    if (not np.isfinite(library_sum) or library_sum <= 0
+            or not np.isfinite(values).all() or (values < 0).any()):
+        raise ValueError("need finite nonnegative counts and a positive library sum")
+    return values * (1e6 / library_sum)
+
+
 def single_replicate_features(frame: pd.DataFrame) -> np.ndarray:
     """No pooled replicate means or replicate-correlation features are allowed."""
     values = frame[list(SINGLE_FEATURES)].to_numpy(float).copy()

@@ -8,6 +8,7 @@ from microc_foundation.cluster_transfer import (
     candidate_guard_mask,
     circular_shift_control,
     fit_partition,
+    library_cpm_matrix,
     nonoverlapping_grid,
     partition_agreement,
     single_replicate_features,
@@ -22,6 +23,24 @@ def test_single_features_exclude_replicate_correlation_and_transform_counts():
     assert values[0, 0] == pytest.approx(np.log(2))
     frame["replicate_correlation"] = [0., 0.]
     assert np.array_equal(values, single_replicate_features(frame))
+
+
+def test_library_cpm_removes_global_multiplier_not_local_variation():
+    counts = np.array([[1., 2.], [2., 4.]])
+    assert np.array_equal(library_cpm_matrix(counts, 1e6), counts)
+    assert np.array_equal(library_cpm_matrix(counts*10, 1e7), counts)
+    changed = counts.copy()
+    changed[0, 0] *= 2
+    assert not np.array_equal(library_cpm_matrix(changed, 1e6), counts)
+
+
+def test_library_cpm_rejects_missing_or_invalid_library_counts():
+    for total in (0, -1, np.nan, np.inf):
+        with pytest.raises(ValueError):
+            library_cpm_matrix(np.ones((2, 2)), total)
+    for matrix in (np.full((2, 2), np.nan), np.full((2, 2), -1)):
+        with pytest.raises(ValueError):
+            library_cpm_matrix(matrix, 10)
 
 
 def test_grid_and_guard_respect_half_open_boundaries_and_chromosomes():

@@ -20,6 +20,7 @@ import torch
 from microc_foundation.annotations import read_structures_csv
 from microc_foundation.contrastive_texture import (
     encode_replicates,
+    representation_diagnostics,
     texture_input,
     train_pair_encoder,
 )
@@ -39,18 +40,6 @@ def hash_file(path):
         for chunk in iter(lambda: handle.read(1024*1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
-
-
-def representation_diagnostics(features):
-    h = np.asarray(features, dtype=float)
-    normalized = h / np.maximum(np.linalg.norm(h, axis=2, keepdims=True), 1e-12)
-    similar = normalized[:, 0] @ normalized[:, 1].T
-    offdiag = ~np.eye(len(h), dtype=bool)
-    return {"windows": len(h), "mean_embedding_std": float(h.mean(axis=1).std(axis=0).mean()),
-            "mean_positive_cosine": float(np.diag(similar).mean()),
-            "mean_nonmatching_cosine": float(similar[offdiag].mean()),
-            "rep1_to_rep2_top1_retrieval": float((similar.argmax(axis=1) == np.arange(len(h))).mean()),
-            "chance_retrieval": 1 / len(h)}
 
 
 def main() -> int:

@@ -6,6 +6,7 @@ from microc_foundation.contrastive_texture import (
     TextureEncoder,
     encode_replicates,
     paired_contrastive_loss,
+    representation_diagnostics,
     texture_input,
     train_pair_encoder,
 )
@@ -62,3 +63,21 @@ def test_rejects_invalid_maps_and_single_pair_loss():
         paired_contrastive_loss(torch.ones(1, 2), torch.ones(1, 2))
     with pytest.raises(ValueError):
         train_pair_encoder(np.ones((1, 2, 64, 64)), seed=1)
+
+
+def test_diagnostics_match_explicit_cosines_without_numeric_warnings():
+    features = np.stack((np.eye(3), np.eye(3)), axis=1)
+    with np.errstate(all="raise"):
+        result = representation_diagnostics(features)
+    assert result["mean_positive_cosine"] == 1
+    assert result["mean_nonmatching_cosine"] == 0
+    assert result["rep1_to_rep2_top1_retrieval"] == 1
+    assert result["chance_retrieval"] == pytest.approx(1 / 3)
+    assert representation_diagnostics(np.ones((3, 2, 4)))["mean_embedding_std"] == 0
+
+
+def test_diagnostics_reject_nonfinite_unpaired_or_singleton_embeddings():
+    for features in [np.ones((1, 2, 4)), np.ones((3, 3, 4)),
+                     np.ones((3, 2, 0)), np.full((3, 2, 4), np.nan)]:
+        with pytest.raises(ValueError):
+            representation_diagnostics(features)

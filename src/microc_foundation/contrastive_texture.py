@@ -12,6 +12,22 @@ from torch.nn import functional as F
 from .structure_fidelity import distance_residual
 
 
+def representation_diagnostics(features: np.ndarray) -> dict[str, object]:
+    """Finite paired-feature summaries without platform-dependent BLAS matmul."""
+    h = np.asarray(features, dtype=float)
+    if (h.ndim != 3 or h.shape[1] != 2 or h.shape[2] < 1 or len(h) < 2
+            or not np.isfinite(h).all()):
+        raise ValueError("need at least two finite paired embeddings")
+    normalized = h / np.maximum(np.linalg.norm(h, axis=2, keepdims=True), 1e-12)
+    similar = np.einsum("ik,jk->ij", normalized[:, 0], normalized[:, 1], optimize=False)
+    offdiag = ~np.eye(len(h), dtype=bool)
+    return {"windows": len(h), "mean_embedding_std": float(h.mean(axis=1).std(axis=0).mean()),
+            "mean_positive_cosine": float(np.diag(similar).mean()),
+            "mean_nonmatching_cosine": float(similar[offdiag].mean()),
+            "rep1_to_rep2_top1_retrieval": float((similar.argmax(axis=1) == np.arange(len(h))).mean()),
+            "chance_retrieval": 1 / len(h)}
+
+
 def texture_input(counts: np.ndarray) -> np.ndarray:
     """128-bin counts -> clipped unit-RMS distance residual -> 64-bin average."""
     x = np.asarray(counts, dtype=float)

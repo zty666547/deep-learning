@@ -10,6 +10,8 @@
 
 同日补[训练区专属自监督纹理对照](docs/task2-deep-texture-results.md)：五折AUC学习/随机为0.5558/0.5903，两个跨重复方向0.5235/0.5340；没有解决可分性。保留全部权重、训练记录、留出概率与数值警告核验，不将100%同坐标重复检索写成结构识别成功。
 
+代码ZIP的范围、数据准备与入口见[代码复现包使用协议](docs/code-bundle-protocol.md)。打包读取精确Git提交并逐文件校验，不混入原始大数据/环境/以前的ZIP；真实输入仍按课程资料准备。报告与代码ZIP、PPT讲解视频分别交付。
+
 2026-10-10已按课程要求下载并校验WT 37°C、ΔstpA、ΔhnsΔstpA各双重复，生成覆盖全染色体的任务三4面板分段图。来源、方法和边界见[任务三结果说明](docs/task3-visualization-results.md)与[原要求核验](docs/course-requirements-audit.md)。
 
 ## 本轮范围

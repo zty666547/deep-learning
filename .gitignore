@@ -17,3 +17,6 @@ outputs/*
 !data/processed/.gitkeep
 !outputs/.gitkeep
 
+# Commit-addressed local code bundles; source and receipts are versioned separately.
+deliverables/代码复现包-*.zip
+

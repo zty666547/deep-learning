@@ -12,6 +12,8 @@
 
 代码ZIP的范围、数据准备与入口见[代码复现包使用协议](docs/code-bundle-protocol.md)。打包读取精确Git提交并逐文件校验，不混入原始大数据/环境/以前的ZIP；真实输入仍按课程资料准备。报告与代码ZIP、PPT讲解视频分别交付。
 
+本地已生成快照`a1b2a8e`的代码ZIP（25.7 MB/281文件）；从包内源码构建普通wheel、隔离导入和229项测试通过，真实128×128窗口热图已验证。详细[代码包凭据](docs/code-bundle-validation.md)明确不包含原始数据/权重、未重训全实验及依赖沿用范围。ZIP本体本地交付，Git保存重建工具与校验记录。
+
 2026-10-10已按课程要求下载并校验WT 37°C、ΔstpA、ΔhnsΔstpA各双重复，生成覆盖全染色体的任务三4面板分段图。来源、方法和边界见[任务三结果说明](docs/task3-visualization-results.md)与[原要求核验](docs/course-requirements-audit.md)。
 
 ## 本轮范围

@@ -1,0 +1,5 @@
+metric,paired_n,mean_improvement,median_improvement,improved,tied,worse
+annotation_shape_r,41,0.00287042641936461,0.0035540469641496264,32,0,9
+profile_correlation,41,0.0003694287466246952,0.0004990035211025479,33,0,8
+peak_displacement_bp,41,-177.5609756097561,0.0,4,35,2
+top_profile_jaccard,41,0.0050447184137960704,0.0,14,15,12

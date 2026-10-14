@@ -1,0 +1,266 @@
+{
+  "protocol": "task5-known-shape-position-v1",
+  "trained": false,
+  "structures": 41,
+  "seeds": [
+    2026,
+    2027,
+    2028
+  ],
+  "bin_bp": 80,
+  "minimum_distance_bp": 800,
+  "maximum_profile_distance_bp": 6400,
+  "smoothing": [
+    0.25,
+    0.5,
+    0.25
+  ],
+  "top_profile_fraction": 0.1,
+  "aggregation": "mean per-replicate/seed metrics within each structure ID; 41 paired structures",
+  "class_summaries": [
+    {
+      "label": "OPCID",
+      "method": "bicubic",
+      "structures": 7,
+      "annotation_shape_r_n": 7,
+      "annotation_shape_r_mean": 0.6960613308948604,
+      "annotation_shape_r_median": 0.6966603472554821,
+      "profile_correlation_n": 7,
+      "profile_correlation_mean": 0.9914782479685115,
+      "profile_correlation_median": 0.9913378545555189,
+      "peak_displacement_bp_n": 7,
+      "peak_displacement_bp_mean": 22.857142857142858,
+      "peak_displacement_bp_median": 40.0,
+      "top_profile_jaccard_n": 7,
+      "top_profile_jaccard_mean": 0.8628943556164277,
+      "top_profile_jaccard_median": 0.8571428571428571
+    },
+    {
+      "label": "OPCID",
+      "method": "cnn",
+      "structures": 7,
+      "annotation_shape_r_n": 7,
+      "annotation_shape_r_mean": 0.7040618233527737,
+      "annotation_shape_r_median": 0.7049922654302047,
+      "profile_correlation_n": 7,
+      "profile_correlation_mean": 0.9921398581068192,
+      "profile_correlation_median": 0.992311753854084,
+      "peak_displacement_bp_n": 7,
+      "peak_displacement_bp_mean": 17.142857142857142,
+      "peak_displacement_bp_median": 0.0,
+      "top_profile_jaccard_n": 7,
+      "top_profile_jaccard_mean": 0.8651807346759409,
+      "top_profile_jaccard_median": 0.8571428571428571
+    },
+    {
+      "label": "CHIN",
+      "method": "bicubic",
+      "structures": 30,
+      "annotation_shape_r_n": 30,
+      "annotation_shape_r_mean": 0.7449611742653299,
+      "annotation_shape_r_median": 0.748238272454224,
+      "profile_correlation_n": 30,
+      "profile_correlation_mean": 0.9857866951522049,
+      "profile_correlation_median": 0.9866441149252962,
+      "peak_displacement_bp_n": 30,
+      "peak_displacement_bp_mean": 690.6666666666666,
+      "peak_displacement_bp_median": 0.0,
+      "top_profile_jaccard_n": 30,
+      "top_profile_jaccard_mean": 0.8086529683632945,
+      "top_profile_jaccard_median": 0.7941707717569786
+    },
+    {
+      "label": "CHIN",
+      "method": "cnn",
+      "structures": 30,
+      "annotation_shape_r_n": 30,
+      "annotation_shape_r_mean": 0.7464111379069768,
+      "annotation_shape_r_median": 0.758747302708374,
+      "profile_correlation_n": 30,
+      "profile_correlation_mean": 0.986134075784095,
+      "profile_correlation_median": 0.9876421351314818,
+      "peak_displacement_bp_n": 30,
+      "peak_displacement_bp_mean": 935.5555555555554,
+      "peak_displacement_bp_median": 0.0,
+      "top_profile_jaccard_n": 30,
+      "top_profile_jaccard_mean": 0.8109841446850158,
+      "top_profile_jaccard_median": 0.8144499178981938
+    },
+    {
+      "label": "CHID",
+      "method": "bicubic",
+      "structures": 4,
+      "annotation_shape_r_n": 4,
+      "annotation_shape_r_mean": 0.7652802488419693,
+      "annotation_shape_r_median": 0.753157980540721,
+      "profile_correlation_n": 4,
+      "profile_correlation_mean": 0.985206506334861,
+      "profile_correlation_median": 0.986026986743006,
+      "peak_displacement_bp_n": 4,
+      "peak_displacement_bp_mean": 750.0,
+      "peak_displacement_bp_median": 40.0,
+      "top_profile_jaccard_n": 4,
+      "top_profile_jaccard_mean": 0.7287606268870174,
+      "top_profile_jaccard_median": 0.7342973674453096
+    },
+    {
+      "label": "CHID",
+      "method": "cnn",
+      "structures": 4,
+      "annotation_shape_r_n": 4,
+      "annotation_shape_r_mean": 0.7698265305267568,
+      "annotation_shape_r_median": 0.7575730241761984,
+      "profile_correlation_n": 4,
+      "profile_correlation_mean": 0.9852299785065508,
+      "profile_correlation_median": 0.9865632928657655,
+      "peak_displacement_bp_n": 4,
+      "peak_displacement_bp_mean": 743.3333333333334,
+      "peak_displacement_bp_median": 40.0,
+      "top_profile_jaccard_n": 4,
+      "top_profile_jaccard_mean": 0.7589840048613685,
+      "top_profile_jaccard_median": 0.7681992337164751
+    }
+  ],
+  "paired_improvements": [
+    {
+      "metric": "annotation_shape_r",
+      "paired_n": 41,
+      "mean_improvement": 0.00287042641936461,
+      "median_improvement": 0.0035540469641496264,
+      "improved": 32,
+      "tied": 0,
+      "worse": 9
+    },
+    {
+      "metric": "profile_correlation",
+      "paired_n": 41,
+      "mean_improvement": 0.0003694287466246952,
+      "median_improvement": 0.0004990035211025479,
+      "improved": 33,
+      "tied": 0,
+      "worse": 8
+    },
+    {
+      "metric": "peak_displacement_bp",
+      "paired_n": 41,
+      "mean_improvement": -177.5609756097561,
+      "median_improvement": 0.0,
+      "improved": 4,
+      "tied": 35,
+      "worse": 2
+    },
+    {
+      "metric": "top_profile_jaccard",
+      "paired_n": 41,
+      "mean_improvement": 0.0050447184137960704,
+      "median_improvement": 0.0,
+      "improved": 14,
+      "tied": 15,
+      "worse": 12
+    }
+  ],
+  "peak_annotation_checks_seed2026": [
+    {
+      "label": "OPCID",
+      "replicate": 1,
+      "method": "bicubic",
+      "target_peak_inside_annotation": 0.7142857142857143,
+      "prediction_peak_inside_annotation": 0.7142857142857143
+    },
+    {
+      "label": "OPCID",
+      "replicate": 1,
+      "method": "cnn",
+      "target_peak_inside_annotation": 0.7142857142857143,
+      "prediction_peak_inside_annotation": 0.7142857142857143
+    },
+    {
+      "label": "OPCID",
+      "replicate": 2,
+      "method": "bicubic",
+      "target_peak_inside_annotation": 0.7142857142857143,
+      "prediction_peak_inside_annotation": 0.7142857142857143
+    },
+    {
+      "label": "OPCID",
+      "replicate": 2,
+      "method": "cnn",
+      "target_peak_inside_annotation": 0.7142857142857143,
+      "prediction_peak_inside_annotation": 0.7142857142857143
+    },
+    {
+      "label": "CHIN",
+      "replicate": 1,
+      "method": "bicubic",
+      "target_peak_inside_annotation": 0.0,
+      "prediction_peak_inside_annotation": 0.06666666666666667
+    },
+    {
+      "label": "CHIN",
+      "replicate": 1,
+      "method": "cnn",
+      "target_peak_inside_annotation": 0.0,
+      "prediction_peak_inside_annotation": 0.06666666666666667
+    },
+    {
+      "label": "CHIN",
+      "replicate": 2,
+      "method": "bicubic",
+      "target_peak_inside_annotation": 0.03333333333333333,
+      "prediction_peak_inside_annotation": 0.03333333333333333
+    },
+    {
+      "label": "CHIN",
+      "replicate": 2,
+      "method": "cnn",
+      "target_peak_inside_annotation": 0.03333333333333333,
+      "prediction_peak_inside_annotation": 0.03333333333333333
+    },
+    {
+      "label": "CHID",
+      "replicate": 1,
+      "method": "bicubic",
+      "target_peak_inside_annotation": 0.5,
+      "prediction_peak_inside_annotation": 0.5
+    },
+    {
+      "label": "CHID",
+      "replicate": 1,
+      "method": "cnn",
+      "target_peak_inside_annotation": 0.5,
+      "prediction_peak_inside_annotation": 0.5
+    },
+    {
+      "label": "CHID",
+      "replicate": 2,
+      "method": "bicubic",
+      "target_peak_inside_annotation": 0.5,
+      "prediction_peak_inside_annotation": 0.5
+    },
+    {
+      "label": "CHID",
+      "replicate": 2,
+      "method": "cnn",
+      "target_peak_inside_annotation": 0.5,
+      "prediction_peak_inside_annotation": 0.5
+    }
+  ],
+  "fixed_cases": [
+    "CHIN_221",
+    "OPCID_62",
+    "CHID_23"
+  ],
+  "input_sha256": {
+    "outputs/task5_corrected/seed_2026/test_reconstruction.npz": "5068a93f7c67e49490b6eff967d0f5ea5604cb672416172a938838510215eb7b",
+    "outputs/task5_corrected/seed_2027/test_reconstruction.npz": "1933b31248cbf20ee29274b4d1bc9454d4fb41fcc828998b29e32fb3cd7de0d7",
+    "outputs/task5_corrected/seed_2028/test_reconstruction.npz": "a8794dbc3468426444a224e999d9672f32a4505af2ccbece12198f2c2d9aa9ad"
+  },
+  "limitations": [
+    "morphology/profile localization surrogates, not trained independent structure detectors",
+    "dominant profile peak can lie outside the known annotation; this coverage is reported",
+    "annotation square locates interval intersection, not biological morphology outline",
+    "fixed test split; shared/overlapping windows and two channels are not independent biological samples",
+    "undefined correlations and peak locations are retained as missing, not successes",
+    "no retraining, parameter search, or replacement of strict-history divergence"
+  ]
+}
